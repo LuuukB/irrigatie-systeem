@@ -9,7 +9,8 @@ os.environ["KIVY_NO_ARGS"] = "1"
 
 from kivy.input.providers.mouse import MouseMotionEvent  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
-from kivy.uix.widget import Widget  # noqa: E402
+from kivy.uix.widget import Widget
+from kivy.graphics.texture import Texture # noqa: E402
 
 class CameraWidget(Widget ):
     def __init__(self, **kwargs):
