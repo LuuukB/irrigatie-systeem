@@ -1,5 +1,6 @@
 import os
 import asyncio
+import cv2
 
 from camera.i_camera_handler import ICameraHandler
 
