@@ -52,10 +52,10 @@ class TemplateApp(App):
             await self.async_run(async_lib="asyncio")
             for task in self.async_tasks:
                 task.cancel()
-        camera_handler = CameraHandler()
+        camera_factory = CameraFactory()
         camera_widget : CameraWidget = self.root.ids["camera0"]
-        camera_handler.add_camera_offline("offlinecamera")
-        camera = camera_handler.get_camera("offlinecamera")
+        camera_factory.add_camera_offline("offlinecamera")
+        camera = camera_factory.get_camera("offlinecamera")
         # Placeholder task
         self.async_tasks.append(asyncio.create_task(camera_widget.start_stream(camera)))
         self.async_tasks.append(asyncio.ensure_future(self.template_function()))
