@@ -20,6 +20,10 @@ class CameraWidget(Widget ):
         Builder.load_file(os.path.join(os.path.dirname(__file__), "camera_widget.kv"))
 
     async def start_stream(self, camera : ICameraHandler):
+        """
+        starts a loop that gets frames from the given camera,
+        turns them into a texture and fils the Image with the texture
+        """
         self.camera = camera
 
         while self.running:
@@ -44,4 +48,8 @@ class CameraWidget(Widget ):
             await asyncio.sleep(0.01)
 
     async def stop_stream(self):
+        """
+        stops the camera and clears the texture
+        """
         self.running = False
+        self.texture = None
