@@ -81,7 +81,7 @@ class TemplateApp(App):
         camera_widget: CameraWidget = self.root.ids["camera0"]
         camera_factory.add_camera_offline("offlinecamera")
         camera = camera_factory.get_camera("offlinecamera")
-        camera_widget.start_stream(camera)
+        await camera_widget.start_stream(camera)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="template-app")
