@@ -25,7 +25,7 @@ Config.set("kivy", "keyboard_mode", "systemanddock")
 from kivy.app import App  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
 
-from widgets.camera_widget import CameraWidget
+from widgets.camera_widget.camera_widget import CameraWidget
 from factory.camera_factory import CameraFactory
 
 class TemplateApp(App):
