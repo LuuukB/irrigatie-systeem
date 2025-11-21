@@ -37,6 +37,7 @@ class CameraWidget(Widget ):
                 self.texture = Texture.create(
                     size=(frame.shape[1], frame.shape[0]), icolorfmt="rgb"
                 )
+                print(frame.shape)
                 self.texture.flip_vertical()
 
             self.texture.blit_buffer(
