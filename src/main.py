@@ -53,10 +53,8 @@ class TemplateApp(App):
             for task in self.async_tasks:
                 task.cancel()
 
-
-
         # Placeholder task
-        self.async_tasks.append(asyncio.create_task(stream_cameras()))
+        self.async_tasks.append(asyncio.create_task(self.stream_cameras()))
         self.async_tasks.append(asyncio.ensure_future(self.template_function()))
 
         return await asyncio.gather(run_wrapper(), *self.async_tasks)
