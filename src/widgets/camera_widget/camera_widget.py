@@ -1,7 +1,7 @@
 import os
 import asyncio
 
-from src.camera.i_camera_handler import ICameraHandler
+from camera.i_camera_handler import ICameraHandler
 
 # Must come before kivy imports
 os.environ["KIVY_NO_ARGS"] = "1"
