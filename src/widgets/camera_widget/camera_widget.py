@@ -26,6 +26,9 @@ class CameraWidget(Widget ):
         starts a loop that gets frames from the given camera,
         turns them into a texture and fils the Image with the texture
         """
+        while self.root is None:
+            await asyncio.sleep(0.01)
+
         self.camera = camera
 
         while self.running:
