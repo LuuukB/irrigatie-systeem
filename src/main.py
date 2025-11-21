@@ -82,6 +82,13 @@ class TemplateApp(App):
                 f"{'Tic' if self.counter % 2 == 0 else 'Tac'}: {self.counter}"
             )
 
+    async def stream_cameras(self):
+        camera_factory = CameraFactory()
+        camera_widget: CameraWidget = self.root.ids["camera0"]
+        camera_factory.add_camera_offline("offlinecamera")
+        camera = camera_factory.get_camera("offlinecamera")
+        self.async_tasks.append(asyncio.create_task(camera_widget.start_stream(camera)))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="template-app")
 
