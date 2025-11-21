@@ -25,6 +25,8 @@ Config.set("kivy", "keyboard_mode", "systemanddock")
 from kivy.app import App  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
 
+from widgets.camera_widget import CameraWidget
+from factory.camera_factory import CameraFactory
 
 class TemplateApp(App):
     """Base class for the main Kivy app."""
@@ -50,8 +52,12 @@ class TemplateApp(App):
             await self.async_run(async_lib="asyncio")
             for task in self.async_tasks:
                 task.cancel()
-
+        camera_handler = CameraHandler()
+        camera_widget : CameraWidget = self.root.ids["camera0"]
+        camera_handler.add_camera_offline("offlinecamera")
+        camera = camera_handler.get_camera("offlinecamera")
         # Placeholder task
+        self.async_tasks.append(asyncio.create_task(camera_widget.start_stream(camera)))
         self.async_tasks.append(asyncio.ensure_future(self.template_function()))
 
         return await asyncio.gather(run_wrapper(), *self.async_tasks)
@@ -69,7 +75,6 @@ class TemplateApp(App):
             self.root.ids.counter_label.text = (
                 f"{'Tic' if self.counter % 2 == 0 else 'Tac'}: {self.counter}"
             )
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="template-app")
