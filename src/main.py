@@ -52,6 +52,8 @@ class TemplateApp(App):
             await self.async_run(async_lib="asyncio")
             for task in self.async_tasks:
                 task.cancel()
+            while self.root is None:
+                await asyncio.sleep(0.01)
         camera_factory = CameraFactory()
         camera_widget : CameraWidget = self.root.ids["camera0"]
         camera_factory.add_camera_offline("offlinecamera")
