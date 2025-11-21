@@ -52,8 +52,12 @@ class TemplateApp(App):
             await self.async_run(async_lib="asyncio")
             for task in self.async_tasks:
                 task.cancel()
-            while self.root is None:
-                await asyncio.sleep(0.01)
+
+        run_task = asyncio.create_task(run_wrapper())
+
+        while self.root is None:
+            await asyncio.sleep(0.01)
+
         camera_factory = CameraFactory()
         camera_widget : CameraWidget = self.root.ids["camera0"]
         camera_factory.add_camera_offline("offlinecamera")
@@ -62,7 +66,7 @@ class TemplateApp(App):
         self.async_tasks.append(asyncio.create_task(camera_widget.start_stream(camera)))
         self.async_tasks.append(asyncio.ensure_future(self.template_function()))
 
-        return await asyncio.gather(run_wrapper(), *self.async_tasks)
+        return await asyncio.gather(run_task, *self.async_tasks)
 
     async def template_function(self) -> None:
         """Placeholder forever loop."""
