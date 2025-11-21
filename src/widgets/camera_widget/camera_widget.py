@@ -14,7 +14,7 @@ class CameraWidget(Widget ):
     def __init__(self, **kwargs):
         super(CameraWidget,self ).__init__(**kwargs)
         self.texture : Texture = None
-        self.camera = Optional[IcameraHandler]
+        self.camera : ICameraHandler = None
         self.running : bool = True
 
         Builder.load_file(os.path.join(os.path.dirname(__file__), "camera_widget.kv"))
