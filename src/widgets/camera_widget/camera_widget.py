@@ -49,7 +49,7 @@ class CameraWidget(Widget ):
                mipmap_generation=False,
             )
 
-            self.root.ids.image.texture = self.texture
+            self.ids.image.texture = self.texture
             await asyncio.sleep(0.01)
 
     async def stop_stream(self):
