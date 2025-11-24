@@ -55,7 +55,7 @@ class TemplateApp(App):
 
         # Placeholder task
         self.async_tasks.append(asyncio.create_task(self.stream_cameras()))
-        self.async_tasks.append(asyncio.create_task(self.template_function()))
+        #self.async_tasks.append(asyncio.create_task(self.template_function()))
 
         return await asyncio.gather(run_wrapper(), *self.async_tasks)
 
@@ -79,9 +79,14 @@ class TemplateApp(App):
 
         camera_factory = CameraFactory()
         camera_widget: CameraWidget = self.root.ids["camera0"]
-        camera_factory.add_camera_offline("offlinecamera")
-        camera = camera_factory.get_camera("offlinecamera")
-        await camera_widget.start_stream(camera)
+        camera_factory.add_camera_offline("video")
+        await camera_factory.start_all()
+        print("start")
+        asyncio.create_task(
+            camera_widget.stream_camera(camera_factory.get_camera("video"))
+        )
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="template-app")
