@@ -2,13 +2,11 @@ import os
 import asyncio
 import cv2
 
-from kivy.clock import Clock
 from camera.i_camera_handler import ICameraHandler
 
 # Must come before kivy imports
 os.environ["KIVY_NO_ARGS"] = "1"
-
-from kivy.input.providers.mouse import MouseMotionEvent  # noqa: E402
+  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
 from kivy.uix.widget import Widget
 from kivy.graphics.texture import Texture # noqa: E402
