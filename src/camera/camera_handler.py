@@ -1,10 +1,7 @@
 import asyncio
-
-import numpy as np
 import cv2
 from pathlib import Path
 from farm_ng.core.event_client import EventClient
-from farm_ng.core.event_service_pb2 import EventServiceConfig
 from farm_ng.core.event_service_pb2 import EventServiceConfigList
 from farm_ng.core.event_service_pb2 import SubscribeRequest
 from farm_ng.core.events_file_reader import payload_to_protobuf
