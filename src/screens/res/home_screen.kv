@@ -1,0 +1,13 @@
+<HomeScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 20
+        padding: 20
+
+        Label:
+            id: counter_label
+            text: "Teller: 0"
+
+        Button:
+            text: "Tel 1 op"
+            on_release: root.increase_counter()

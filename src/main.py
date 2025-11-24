@@ -27,6 +27,9 @@ from kivy.lang.builder import Builder  # noqa: E402
 
 from widgets.camera_widget.camera_widget import CameraWidget
 from factory.camera_factory import CameraFactory
+from screens.home_screen import HomeScreen
+from screens.drive_screen import DriveScreen
+from screens.filter_screen import FilterScreen
 
 class TemplateApp(App):
     """Base class for the main Kivy app."""
@@ -46,18 +49,18 @@ class TemplateApp(App):
         App.get_running_app().stop()
 
     async def app_func(self):
-        async def run_wrapper() -> None:
+        #async def run_wrapper() -> None:
             # we don't actually need to set asyncio as the lib because it is
             # the default, but it doesn't hurt to be explicit
-            await self.async_run(async_lib="asyncio")
-            for task in self.async_tasks:
-                task.cancel()
+         await self.async_run(async_lib="asyncio")
+         #   for task in self.async_tasks:
+          #      task.cancel()
 
         # Placeholder task
-        self.async_tasks.append(asyncio.create_task(self.stream_cameras()))
+        #self.async_tasks.append(asyncio.create_task(self.stream_cameras()))
         #self.async_tasks.append(asyncio.create_task(self.template_function()))
 
-        return await asyncio.gather(run_wrapper(), *self.async_tasks)
+        #return await asyncio.gather(run_wrapper(), *self.async_tasks)
 
     async def template_function(self) -> None:
         """Placeholder forever loop."""
