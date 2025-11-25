@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from vieuw_models.drive_model import DriveModel
 
-# Laad het KV-bestand automatisch vanuit dezelfde map
+
 Builder.load_file(os.path.join(os.path.dirname(__file__), "res/drive_screen.kv"))
 
 class DriveScreen(Screen):
@@ -15,7 +15,9 @@ class DriveScreen(Screen):
         print("hello")
 
     def on_enter(self):
-        print("drive")
+        print("drive start")
+    def on_leave(self):
+        print("drive stop")
 
     def increase_counter(self):
         self.vm.increase()

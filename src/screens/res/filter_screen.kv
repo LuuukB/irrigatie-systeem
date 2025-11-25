@@ -1,13 +1,78 @@
 <FilterScreen>:
     BoxLayout:
-        orientation: "vertical"
+        orientation: "horizontal"
         spacing: 20
         padding: 20
 
-        Label:
-            id: counter_label
-            text: "Teller: 0"
+        BoxLayout:
+            orientation: "vertical"
+            Image:
+                id: oak0
+            Image
+                id: oak1
 
-        Button:
-            text: "Tel 1 op"
-            on_release: root.increase_counter()
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 20
+            padding: 20
+
+            Label:
+                text: "upper_hue"
+
+            Slider:
+                slider_id: 'upper_hue'
+                min: 0
+                max: 255
+                value: root.upper_hue
+                on_value: root.on_slider_change(self)
+
+            Label:
+                text: "lower_hue"
+
+            Slider:
+                slider_id: 'lower_hue'
+                min: 0
+                max: 255
+                value: root.lower_hue
+                on_value: root.on_slider_change(self)
+
+            Label:
+                text: "upper_sat"
+
+            Slider:
+                slider_id: 'upper_sat'
+                min: 0
+                max: 255
+                value: root.upper_sat
+                on_value: root.on_slider_change(self)
+
+            Label:
+                text: "lower_sat"
+
+            Slider:
+                slider_id: 'lower_sat'
+                min: 0
+                max: 255
+                value: root.lower_sat
+                on_value: root.on_slider_change(self)
+
+            Label:
+                text: "upper_val"
+
+            Slider:
+                slider_id: 'upper_val'
+                min: 0
+                max: 255
+                value: root.upper_val
+                on_value: root.on_slider_change(self)
+
+            Label:
+                text: "lower_val"
+
+            Slider:
+                slider_id: 'lower_val'
+                min: 0
+                max: 255
+                value: root.lower_val
+                on_value: root.on_slider_change(self)
