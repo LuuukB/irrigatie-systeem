@@ -12,6 +12,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics.texture import Texture # noqa: E402
 from kivy.properties import ObjectProperty
 
+Builder.load_file(os.path.join(os.path.dirname(__file__), "camera_widget.kv"))
 
 class CameraWidget(Widget ):
     texture = ObjectProperty(None)
@@ -22,7 +23,7 @@ class CameraWidget(Widget ):
         self.camera : ICameraHandler = None
         self.running : bool = True
 
-        Builder.load_file(os.path.join(os.path.dirname(__file__), "camera_widget.kv"))
+
 
     async def stream_camera(self, camera : ICameraHandler):
         """
