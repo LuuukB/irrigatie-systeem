@@ -1,16 +1,20 @@
 <HomeScreen>:
-    BoxLayout:
-        orientation: "vertical"
+    GridLayout:
+        cols: 2
+        rows: 2
         spacing: 20
         padding: 20
 
-        Label:
-            id: counter_label
-            text: "Teller: 0"
-
         Button:
-            text: "Tel 1 op"
-            on_release: root.increase_counter()
+            id: start_stop_btn
+            text: "start"
+            on_release: root.start_stop()
 
-        CameraWidget:
+        Image:
             id: oak0
+
+        Image:
+            id: oak2
+
+        Image:
+            id: oak3
