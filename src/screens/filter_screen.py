@@ -6,7 +6,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from vieuw_models.filter_model import FilterModel
 from kivy.properties import NumericProperty
-from factory.camera_factory import CameraFactory
+from setup.setup import Setup
 from widgets.camera_widget.camera_widget import CameraWidget
 
 
@@ -25,9 +25,12 @@ class FilterScreen(Screen):
         self.vm = FilterModel()
         self.vm.bind(frame_texture = self.update_oak0)
         self.vm.bind(filter_texture = self.update_oak1)
-        self.camera_factory = CameraFactory()
-        self.camera_factory.add_camera_offline("oak0")
-        asyncio.create_task(self.vm.process_stream(self.camera_factory.get_camera("oak0")))
+        self.setup = Setup()
+        self.tasks: List[asyncio.Task] = [asyncio.create_task(self.start_cameras())]
+
+    async def start_cameras(self):
+        camera = await self.setup.get_camera("oak0")
+        self.tasks.append(asyncio.create_task(self.vm.process_stream(camera)))
 
     def update_oak0(self,instance, value):
         if value:
@@ -42,3 +45,7 @@ class FilterScreen(Screen):
         value = round(slider.value)
         setattr(self, property, value)
         self.vm.set_filter_property(property, value)
+
+    def stop(self):
+       for task in self.tasks:
+           task.cancel()

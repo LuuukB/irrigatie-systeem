@@ -2,7 +2,7 @@ import asyncio
 import cv2
 
 from kivy.graphics.texture import Texture
-from kivy.properties import ObjectProperty, NumericProperty
+from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 from processing.image_processor import ImageProcessor
 from processing.image_filter import ImageFilter
@@ -38,7 +38,6 @@ class FilterModel(EventDispatcher):
 
 
     async def process_stream(self, camera):
-        await camera.start()
         while True:
             frame = await camera.get_frame()
             self.frame_texture = await ImageProcessor.get_processed_frame(frame)
