@@ -28,7 +28,6 @@ from kivy.lang.builder import Builder  # noqa: E402
 from widgets.camera_widget.camera_widget import CameraWidget
 from factory.camera_factory import CameraFactory
 from screens.home_screen import HomeScreen
-from screens.drive_screen import DriveScreen
 from screens.filter_screen import FilterScreen
 
 class TemplateApp(App):
