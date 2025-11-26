@@ -1,20 +1,18 @@
 import asyncio
 import can
-from farm_ng.canbus.packet import Packet # jouw base Packet class
+from farm_ng.canbus.packet import Packet
 
-class AsyncCanHandler:
+class AsyncCanHandler(ICanHandler):
     """
     Async CAN handler die Packets kan versturen naar een microcontroller.
     Ondersteunt COB-ID gebaseerde berichten.
     Geen callbacks nodig voor alleen verzenden.
     """
     def __init__(self, channel="can0", bustype="socketcan", bitrate=250_000):
-        # python-can bus setup
-        self.bus = can.Bus(channel=channel, bustype=bustype, bitrate=bitrate)
 
-        # async send queue
-        self.send_queue = asyncio.Queue()
+        self.bus = can.Bus(channel=channel, bustype=bustype, bitrate=bitrate)
         self._running = False
+        self.callbacks = {}
 
         # receiving via notifier
         #self.reader = can.AsyncBufferedReader()
@@ -24,8 +22,6 @@ class AsyncCanHandler:
         #    timeout=0.01
         #)
 
-        #calbacks for receiving
-        self.callbacks = {}
 
     # ----------------------------
     # Callbacks registratie
