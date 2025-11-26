@@ -13,11 +13,11 @@ from widgets.camera_widget.camera_widget import CameraWidget
 Builder.load_file(os.path.join(os.path.dirname(__file__), "res/filter_screen.kv"))
 
 class FilterScreen(Screen):
-    upper_hue = NumericProperty(0)
+    upper_hue = NumericProperty(180)
     lower_hue = NumericProperty(0)
-    upper_sat = NumericProperty(0)
+    upper_sat = NumericProperty(180)
     lower_sat = NumericProperty(0)
-    upper_val = NumericProperty(0)
+    upper_val = NumericProperty(180)
     lower_val = NumericProperty(0)
 
     def __init__(self, **kwargs):

@@ -14,11 +14,11 @@ class FilterModel(EventDispatcher):
     def __init__(self):
         self.img_filter = ImageFilter()
         self.lower_hue = 0
-        self.upper_hue = 0
+        self.upper_hue = 180
         self.lower_sat = 0
-        self.upper_sat = 0
+        self.upper_sat = 180
         self.lower_val = 0
-        self.upper_val = 0
+        self.upper_val = 180
 
     def update_filter(self):
 

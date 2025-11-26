@@ -5,11 +5,11 @@ class ImageFilter:
     def __init__(self):
         # init met default waarden
         self.lower_hue = 0
-        self.upper_hue = 180
+        self.upper_hue = 0
         self.lower_sat = 0
-        self.upper_sat = 255
+        self.upper_sat = 0
         self.lower_val = 0
-        self.upper_val = 255
+        self.upper_val = 0
 
     def update_filter(self, lower_hue, upper_hue, lower_sat, upper_sat, lower_val, upper_val):
 
