@@ -25,8 +25,7 @@ Config.set("kivy", "keyboard_mode", "systemanddock")
 from kivy.app import App  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
 
-from widgets.camera_widget.camera_widget import CameraWidget
-from factory.camera_factory import CameraFactory
+from setup.setup import Setup
 from screens.home_screen import HomeScreen
 from screens.filter_screen import FilterScreen
 
@@ -37,6 +36,7 @@ class TemplateApp(App):
         super().__init__()
 
         self.counter: int = 0
+        self.setup = Setup()
 
         self.async_tasks: List[asyncio.Task] = []
 
@@ -45,13 +45,25 @@ class TemplateApp(App):
 
     def on_exit_btn(self) -> None:
         """Kills the running kivy application."""
+        root_layout  = App.get_running_app().root
+        sm = root_layout.ids.screen_manager
+        home_screen = sm.get_screen("home")
+        filter_screen = sm.get_screen("filter")
+
+        home_screen.stop()
+        filter_screen.stop()
+
+        asyncio.create_task(self.setup.stop())
+
         App.get_running_app().stop()
 
     async def app_func(self):
         #async def run_wrapper() -> None:
             # we don't actually need to set asyncio as the lib because it is
             # the default, but it doesn't hurt to be explicit
-         await self.async_run(async_lib="asyncio")
+        await self.async_run(async_lib="asyncio")
+
+        await self.setup.initialize_canbus()
          #   for task in self.async_tasks:
           #      task.cancel()
 
@@ -75,18 +87,6 @@ class TemplateApp(App):
                 f"{'Tic' if self.counter % 2 == 0 else 'Tac'}: {self.counter}"
             )
 
-    async def stream_cameras(self):
-        while self.root is None:
-            await asyncio.sleep(0.01)
-
-        camera_factory = CameraFactory()
-        camera_widget: CameraWidget = self.root.ids["camera0"]
-        camera_factory.add_camera_offline("video")
-        await camera_factory.start_all()
-        print("start")
-        asyncio.create_task(
-            camera_widget.stream_camera(camera_factory.get_camera("video"))
-        )
 
 
 
