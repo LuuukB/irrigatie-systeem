@@ -1,8 +1,6 @@
 import os
 import asyncio
 
-from src.can_bus.i_can_handler import ICanHandler
-
 os.environ["KIVY_NO_ARGS"] = "1"
 
 from kivy.uix.screenmanager import Screen
