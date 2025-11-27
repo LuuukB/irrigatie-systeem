@@ -33,7 +33,8 @@ class Setup:
             self.can_bus = self.can_bus_factory.create_online()
             print("create online canbus")
             self.robot_online = True
-        except Exception:
+        except Exception as e:
+            print(e)
             self.can_bus = self.can_bus_factory.create_offline()
             print("create offline canbus")
             self.robot_online = False
