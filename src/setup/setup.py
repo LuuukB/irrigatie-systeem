@@ -21,7 +21,7 @@ class Setup:
 
         self._initialized = True
 
-        self.robot_online = False
+        self.robot_online = True
         self.camera_factory = CameraFactory()
         self.can_bus_factory = CanBusFactory()
         self._cameras: Dict[str, ICameraHandler] = {}
