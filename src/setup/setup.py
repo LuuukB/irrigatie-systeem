@@ -1,6 +1,7 @@
 import asyncio
 from factory.camera_factory import CameraFactory
 from camera.i_camera_handler import ICameraHandler
+from factory.can_bus_factory import CanBusFactory
 
 from typing import Dict
 
@@ -20,13 +21,22 @@ class Setup:
 
         self._initialized = True
 
-        self.robot_online = self.check_status()
+        self.robot_online = False
         self.camera_factory = CameraFactory()
+        self.can_bus_factory = CanBusFactory()
         self._cameras: Dict[str, ICameraHandler] = {}
+        self.can_bus : ICanBusHandler = None
 
-    async def initialize_canbus(self):
+    def initialize_canbus(self):
         # hier moet canbus setup komen
-        await asyncio.sleep(0.1)
+        try:
+            self.can_bus = self.can_bus_factory.create_online()
+            print("create online canbus")
+            self.robot_online = True
+        except Exception:
+            self.can_bus = self.can_bus_factory.create_offline()
+            print("create offline canbus")
+            self.robot_online = False
 
     async def get_camera(self, name: str):
         if name not in self._cameras:
@@ -40,9 +50,6 @@ class Setup:
             self._cameras[name] = cam
 
         return self._cameras[name]
-
-    def check_status(self):
-        return False  # tijdelijk
 
     async def stop(self):
         await self.camera_factory.stop_all()

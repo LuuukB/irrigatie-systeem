@@ -34,9 +34,8 @@ class TemplateApp(App):
 
     def __init__(self) -> None:
         super().__init__()
-
-        self.counter: int = 0
         self.setup = Setup()
+        self.setup.initialize_canbus()
 
         self.async_tasks: List[asyncio.Task] = []
 
@@ -63,30 +62,11 @@ class TemplateApp(App):
             # the default, but it doesn't hurt to be explicit
         await self.async_run(async_lib="asyncio")
 
-        await self.setup.initialize_canbus()
+
          #   for task in self.async_tasks:
           #      task.cancel()
 
-        # Placeholder task
-        #self.async_tasks.append(asyncio.create_task(self.stream_cameras()))
-        #self.async_tasks.append(asyncio.create_task(self.template_function()))
-
         #return await asyncio.gather(run_wrapper(), *self.async_tasks)
-
-    async def template_function(self) -> None:
-        """Placeholder forever loop."""
-        while self.root is None:
-            await asyncio.sleep(0.01)
-
-        while True:
-            await asyncio.sleep(1.0)
-
-            # increment the counter using internal libs and update the gui
-            self.counter = ops.add(self.counter, 1)
-            self.root.ids.counter_label.text = (
-                f"{'Tic' if self.counter % 2 == 0 else 'Tac'}: {self.counter}"
-            )
-
 
 
 

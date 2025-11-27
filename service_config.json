@@ -24,6 +24,34 @@
                 "every_n": 3
             }
         ]
+    },{
+        "name": "oak2",
+        "port": 50012,
+        "host": "localhost",
+        "log_level": "INFO",
+        "subscriptions": [
+            {
+                "uri": {
+                    "path": "/rgb",
+                    "query": "service_name=oak2"
+                },
+                "every_n": 3
+            }
+        ]
+    },{
+        "name": "oak3",
+        "port": 50013,
+        "host": "localhost",
+        "log_level": "INFO",
+        "subscriptions": [
+            {
+                "uri": {
+                    "path": "/rgb",
+                    "query": "service_name=oak3"
+                },
+                "every_n": 3
+            }
+        ]
     }
     ]
 }
