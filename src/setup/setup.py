@@ -2,6 +2,7 @@ import asyncio
 from factory.camera_factory import CameraFactory
 from camera.i_camera_handler import ICameraHandler
 from factory.can_bus_factory import CanBusFactory
+from can_bus.i_can_handler import ICanHandler
 
 from typing import Dict
 
