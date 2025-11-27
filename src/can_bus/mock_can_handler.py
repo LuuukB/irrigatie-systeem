@@ -1,7 +1,7 @@
 import asyncio
 from collections import defaultdict
 from farm_ng.canbus.packet import Packet
-from can.i_can_handler import ICanHandler
+from can_bus.i_can_handler import ICanHandler
 
 class MockCanHandler(ICanHandler):
 

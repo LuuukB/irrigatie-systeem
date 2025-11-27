@@ -8,7 +8,7 @@ class CameraFactory:
     """Factory en manager voor meerdere camera's tegelijk."""
 
     def __init__(self):
-        self.cameras: Dict[str, ICameraHandler] = {}
+        self.cameras: List[ICameraHandler] = {}
 
     def add_camera_online(self, name: str, stream_name: str = "rgb"):
         """Voeg een realtime camera aan de factory."""
