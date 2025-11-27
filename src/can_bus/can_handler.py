@@ -1,7 +1,7 @@
 import asyncio
 import can
 from farm_ng.canbus.packet import Packet
-from can_bus.i_canhandler import ICanHandler
+from can_bus.i_can_handler import ICanHandler
 
 class AsyncCanHandler(ICanHandler):
     """
