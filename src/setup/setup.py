@@ -26,7 +26,7 @@ class Setup:
         self.camera_factory = CameraFactory()
         self.can_bus_factory = CanBusFactory()
         self._cameras: Dict[str, ICameraHandler] = {}
-        self.can_bus : ICanBusHandler = None
+        self.can_bus : ICanHandler = None
 
     def initialize_canbus(self):
         # hier moet canbus setup komen
