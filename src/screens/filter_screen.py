@@ -26,7 +26,7 @@ class FilterScreen(Screen):
         self.vm.bind(frame_texture = self.update_oak0)
         self.vm.bind(filter_texture = self.update_oak1)
         self.setup = Setup()
-        #self.tasks: List[asyncio.Task] = [asyncio.create_task(self.start_cameras())]
+        self.tasks: List[asyncio.Task] = [asyncio.create_task(self.start_cameras())]
 
     async def start_cameras(self):
         camera = await self.setup.get_camera("oak2")
