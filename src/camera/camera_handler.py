@@ -33,15 +33,10 @@ class CameraHandler(ICameraHandler):
                 print("client started")
                 self.running = True
 
-        rate = self.client.config.subscriptions[0].every_n
-        self.frame_stream = self.client.subscribe(
-            SubscribeRequest(
-                uri={"path": f"{self.config_name}/{self.stream_name}"},
-                every_n=rate
-            ),
-            decode=False
-        )
-        asyncio.create_task(self.reader())
+        for sub in self.client.config.subscriptions:
+            if f"service_name={self.config_name}" in sub.uri.query:
+                self.frame_stream = self.client.subscribe(sub, decode=False)
+                asyncio.create_task(self.reader())
 
     async def reader(self):
         async for event, payload in self.frame_stream:
