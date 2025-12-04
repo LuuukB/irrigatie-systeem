@@ -4,11 +4,6 @@ from farm_ng.canbus.packet import Packet
 from can_bus.i_can_handler import ICanHandler
 
 class AsyncCanHandler(ICanHandler):
-    """
-    Async CAN handler die Packets kan versturen naar een microcontroller.
-    Ondersteunt COB-ID gebaseerde berichten.
-    Geen callbacks nodig voor alleen verzenden.
-    """
     def __init__(self, channel="can0", bustype="socketcan", bitrate=250_000):
 
         self.bus = can.Bus(channel=channel, bustype=bustype, bitrate=bitrate)
@@ -24,21 +19,18 @@ class AsyncCanHandler(ICanHandler):
         #)
 
 
-    # ----------------------------
-    # Callbacks registratie
-    # ----------------------------
     def register_callback(self, cob_id, callback):
+        """"
+        registers a callback for a specifick COB-ID
+        """
         if cob_id not in self.callbacks:
             self.callbacks[cob_id] = []
         self.callbacks[cob_id].append(callback)
 
 
-    # ----------------------------
-    # Verzenden
-    # ----------------------------
     def send_packet(self, packet: Packet, cob_id: int):
         """
-        Plaatst een Packet in de send queue om naar de microcontroller te sturen
+        sends a packet to a COB-ID
         """
         print("can on queue")
         msg = can.Message(
@@ -48,37 +40,31 @@ class AsyncCanHandler(ICanHandler):
         )
         try:
             self.bus.send(msg)
-            print(f"[CAN] Sent: COB_ID=0x{msg.arbitration_id:X}, data={msg.data}")
+            print(f"CAN Sent: COB_ID=0x{msg.arbitration_id:X}, data={msg.data}")
         except Exception as e:
-            print(f"[CAN] Send error: {e}")
+            print(f"CAN Send error: {e}")
 
-    # ----------------------------
-    # Ontvangen (optioneel)
-    # ----------------------------
     async def _dispatch(self, msg):
+        """"
+        dispatches a message to the corresponding callbacks
+        """
         cob_id = msg.arbitration_id
 
-        # Specifieke callbacks
         if cob_id in self.callbacks:
             for cb in self.callbacks[cob_id]:
                 cb(msg)
 
-        # Broadcast special COB_IDs
-        if cob_id in self.special_cob_ids:
-            for cb_list in self.callbacks.values():
-                for cb in cb_list:
-                    cb(msg)
 
     async def _receive_task(self):
+        """"
+        constantly listens for incoming messages
+        """
         while self._running:
             msg = await self.reader.get_message()
             if msg:
                 await self._dispatch(msg)
             await asyncio.sleep(0.001)
 
-    # ----------------------------
-    # Run / stop
-    # ----------------------------
     async def run(self):
         """
         Start de send/receive loop

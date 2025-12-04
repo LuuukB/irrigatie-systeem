@@ -29,7 +29,7 @@ class FilterScreen(Screen):
         self.tasks: List[asyncio.Task] = [asyncio.create_task(self.start_cameras())]
 
     async def start_cameras(self):
-        camera = await self.setup.get_camera("oak0")
+        camera = await self.setup.get_camera("oak2")
         self.tasks.append(asyncio.create_task(self.vm.process_stream(camera)))
 
     def update_oak0(self,instance, value):

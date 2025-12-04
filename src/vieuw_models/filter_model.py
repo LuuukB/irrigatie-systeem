@@ -32,10 +32,7 @@ class FilterModel(EventDispatcher):
         )
 
     def set_filter_property(self, property, value):
-        """Set filter"""
         setattr(self, property, value)
-
-
 
     async def process_stream(self, camera):
         while True:
