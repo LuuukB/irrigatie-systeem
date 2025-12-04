@@ -44,6 +44,7 @@ class Setup:
         if name not in self._cameras:
             if self.robot_online:
                 cam = self.camera_factory.add_camera_online(name)
+                print(f"made cam {name}")
                 await cam.start()
             else:
                 cam = self.camera_factory.add_camera_offline()
