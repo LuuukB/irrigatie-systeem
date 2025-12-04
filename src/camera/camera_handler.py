@@ -32,6 +32,8 @@ class CameraHandler(ICameraHandler):
                 self.client = EventClient(cfg)
                 print("client started")
                 self.running = True
+        for sub in self.client.config.subscriptions:
+            print("Path:", sub.uri.path, "Query:", sub.uri.query)
 
         for sub in self.client.config.subscriptions:
             if f"service_name={self.config_name}" in sub.uri.query:
