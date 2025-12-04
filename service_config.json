@@ -11,7 +11,7 @@
             }
         ]
     },{
-        "name": "oak2",
+        "name": "oak0",
         "port": 50010,
         "host": "localhost",
         "log_level": "INFO",
@@ -25,8 +25,8 @@
             }
         ]
     },{
-        "name": "oak1",
-        "port": 50012,
+        "name": "oak2",
+        "port": 50010,
         "host": "localhost",
         "log_level": "INFO",
         "subscriptions": [

@@ -28,11 +28,11 @@ class HomeScreen(Screen):
 
     async def start_cameras(self):
         pass
-        #oak0 = await self.setup.get_camera("oak0")
-        #oak2 = await self.setup.get_camera("oak2")
+        oak0 = await self.setup.get_camera("oak0")
+        oak2 = await self.setup.get_camera("oak2")
         #oak3 = await self.setup.get_camera("oak3")
-        #self.tasks.append(asyncio.create_task(self.vm.process_stream(oak0, "oak0")))
-        #self.tasks.append(asyncio.create_task(self.vm.process_stream(oak2, "oak2")))
+        self.tasks.append(asyncio.create_task(self.vm.process_stream(oak0, "oak0")))
+        self.tasks.append(asyncio.create_task(self.vm.process_stream(oak2, "oak2")))
         #self.tasks.append(asyncio.create_task(self.vm.process_stream(oak3, "oak3")))
 
     def start_stop(self):
