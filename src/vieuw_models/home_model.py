@@ -8,14 +8,25 @@ from kivy.event import EventDispatcher
 from processing.image_processor import ImageProcessor
 from custom_pdo.can_message_structure import SetupPdo
 from can_bus.i_can_handler import ICanHandler
+from setup.setup import Setup
 
 class HomeModel(EventDispatcher):
     oak0_texture = ObjectProperty(None)
     oak2_texture = ObjectProperty(None)
     oak3_texture = ObjectProperty(None)
 
-    def __init__(self, can_bus : ICanHandler):
-        self.can_bus = can_bus
+    def __init__(self):
+        self.setup = Setup()
+        self.can_bus = self.setup.can_bus
+        self.tasks : List[asyncio.Task] = []
+
+    async def start_cameras(self):
+        oak0 = await self.setup.get_camera("oak0")
+        oak2 = await self.setup.get_camera("oak2")
+        oak3 = await self.setup.get_camera("oak3")
+        self.tasks.append( asyncio.create_task(self.process_stream(oak0, "oak0")))
+        self.tasks.append(asyncio.create_task(self.process_stream(oak2, "oak2")))
+        self.tasks.append(asyncio.create_task(self.process_stream(oak3, "oak3")))
 
     async def process_stream(self, camera, property_name : str):
         while True:
@@ -27,3 +38,12 @@ class HomeModel(EventDispatcher):
     def send_message(self):
         msg = SetupPdo(command=1, amount=200)
         self.can_bus.send_packet(packet = msg, cob_id = 0x301)
+
+    def stop_cameras(self):
+        for task in self.tasks:
+            task.cancel()
+
+    async def start(self):
+        while True:
+            print("start")
+            await asyncio.sleep(1)

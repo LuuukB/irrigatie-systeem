@@ -18,10 +18,14 @@ BoxLayout:
 
         Button:
             text: "Home"
-            on_release: screen_manager.current = "home"
+            on_release:
+                screen_manager.transition.direction = 'right'
+                screen_manager.current = "home"
         Button:
             text: "Filter"
-            on_release: screen_manager.current = "filter"
+            on_release:
+                screen_manager.transition.direction = 'left'
+                screen_manager.current = "filter"
 
     # ScreenManager
     ScreenManager:

@@ -4,6 +4,8 @@ import cv2
 from kivy.graphics.texture import Texture
 from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
+
+from setup.setup import Setup
 from processing.image_processor import ImageProcessor
 from processing.image_filter import ImageFilter
 
@@ -13,6 +15,8 @@ class FilterModel(EventDispatcher):
 
     def __init__(self):
         self.img_filter = ImageFilter()
+        self.setup = Setup()
+        self.camera_task : asyncio.Task = None
         self.lower_hue = 0
         self.upper_hue = 180
         self.lower_sat = 0
@@ -34,7 +38,16 @@ class FilterModel(EventDispatcher):
     def set_filter_property(self, property, value):
         setattr(self, property, value)
 
+    async def start_cameras(self):
+        camera = await self.setup.get_camera("oak2")
+        print("start cameras")
+        self.camera_task = asyncio.create_task(self.process_stream(camera))
+
+    def stop_cameras(self):
+        self.camera_task.cancel()
+
     async def process_stream(self, camera):
+        print("start process")
         while True:
             frame = await camera.get_frame()
             self.frame_texture = await ImageProcessor.get_processed_frame(frame)

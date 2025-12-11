@@ -5,44 +5,48 @@ os.environ["KIVY_NO_ARGS"] = "1"
 
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
+
 from vieuw_models.home_model import HomeModel
-
 from factory.camera_factory import CameraFactory
-from setup.setup import Setup
 from widgets.camera_widget.camera_widget import CameraWidget
-
 
 Builder.load_file(os.path.join(os.path.dirname(__file__), "res/home_screen.kv"))
 
 class HomeScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.setup = Setup()
-        self.vm = HomeModel(self.setup.can_bus)
-        self.tasks: List[asyncio.Task] = [asyncio.create_task(self.start_cameras())]
+        self.vm = HomeModel()
+        self.camera_task: asyncio.Task = None
+        self.task :asyncio.Task = None
         self.start_task = False
         self.vm.bind(oak0_texture=self.update_oak0)
         self.vm.bind(oak2_texture=self.update_oak2)
         self.vm.bind(oak3_texture=self.update_oak3)
 
-
     async def start_cameras(self):
-        oak0 = await self.setup.get_camera("oak0")
-        oak2 = await self.setup.get_camera("oak2")
-        oak3 = await self.setup.get_camera("oak3")
-        self.tasks.append(asyncio.create_task(self.vm.process_stream(oak0, "oak0")))
-        self.tasks.append(asyncio.create_task(self.vm.process_stream(oak2, "oak2")))
-        self.tasks.append(asyncio.create_task(self.vm.process_stream(oak3, "oak3")))
+        await self.vm.start_cameras()
+
+    def stop_cameras(self):
+        self.vm.stop_cameras()
+
+    def on_enter(self):
+        print("enter")
+        self.camera_task = asyncio.create_task(self.start_cameras())
+
+    def on_leave(self):
+        print("leave")
+        self.vm.stop_cameras()
 
     def start_stop(self):
         self.start_task = not self.start_task
         print(self.start_task)
         if self.start_task:
-            print("go")
-            self.vm.send_message()
+            print("start")
+            self.task = asyncio.create_task(self.vm.start())
             self.ids.start_stop_btn.text = "stop"
         else:
             print("stop")
+            self.task.cancel()
             self.ids.start_stop_btn.text = "start"
 
     def update_oak0(self,instance, value):
@@ -58,5 +62,5 @@ class HomeScreen(Screen):
             self.ids.oak3.texture = value
 
     def stop(self):
-        for task in self.tasks:
-            task.cancel()
+        self.camera_task.cancel()
+        self.task.cancel()
