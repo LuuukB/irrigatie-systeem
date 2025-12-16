@@ -1,5 +1,6 @@
 import os
 import asyncio
+import json
 os.environ["KIVY_NO_ARGS"] = "1"
 
 from kivy.uix.screenmanager import Screen
@@ -11,14 +12,16 @@ from widgets.camera_widget.camera_widget import CameraWidget
 
 
 Builder.load_file(os.path.join(os.path.dirname(__file__), "res/filter_screen.kv"))
+with open ("filter_values.json") as json_file:
+    data = json.load(json_file)
 
 class FilterScreen(Screen):
-    upper_hue = NumericProperty(180)
-    lower_hue = NumericProperty(0)
-    upper_sat = NumericProperty(180)
-    lower_sat = NumericProperty(0)
-    upper_val = NumericProperty(180)
-    lower_val = NumericProperty(0)
+    upper_hue = NumericProperty(data.get("upper_hue"))
+    lower_hue = NumericProperty(data.get("lower_hue"))
+    upper_sat = NumericProperty(data.get("upper_sat"))
+    lower_sat = NumericProperty(data.get("lower_sat"))
+    upper_val = NumericProperty(data.get("upper_val"))
+    lower_val = NumericProperty(data.get("lower_val"))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -56,5 +59,6 @@ class FilterScreen(Screen):
         self.vm.set_filter_property(property, value)
 
     def stop(self):
-       self.camera_task.cancel()
+        if self.camera_task is not None:
+            self.camera_task.cancel()
 

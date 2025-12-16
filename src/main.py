@@ -49,6 +49,7 @@ class TemplateApp(App):
         home_screen = sm.get_screen("home")
         filter_screen = sm.get_screen("filter")
 
+        self.setup.filter.update_json()
         home_screen.stop()
         filter_screen.stop()
 

@@ -1,5 +1,6 @@
 import asyncio
 import cv2
+import json
 
 from kivy.graphics.texture import Texture
 from kivy.properties import ObjectProperty
@@ -12,17 +13,19 @@ from processing.image_filter import ImageFilter
 class FilterModel(EventDispatcher):
     frame_texture = ObjectProperty(None)
     filter_texture = ObjectProperty(None)
+    with open("filter_values.json") as json_file:
+        data = json.load(json_file)
 
     def __init__(self):
-        self.img_filter = ImageFilter()
         self.setup = Setup()
+        self.img_filter = self.setup.filter
         self.camera_task : asyncio.Task = None
-        self.lower_hue = 0
-        self.upper_hue = 180
-        self.lower_sat = 0
-        self.upper_sat = 180
-        self.lower_val = 0
-        self.upper_val = 180
+        self.lower_hue = self.data.get('lower_hue')
+        self.upper_hue = self.data.get('upper_hue')
+        self.lower_sat = self.data.get('lower_sat')
+        self.upper_sat = self.data.get('upper_sat')
+        self.lower_val = self.data.get('lower_val')
+        self.upper_val = self.data.get('upper_val')
 
     def update_filter(self):
 

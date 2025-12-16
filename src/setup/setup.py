@@ -1,5 +1,6 @@
 import asyncio
 from factory.camera_factory import CameraFactory
+from processing.image_filter import ImageFilter
 from camera.i_camera_handler import ICameraHandler
 from factory.can_bus_factory import CanBusFactory
 from can_bus.i_can_handler import ICanHandler
@@ -26,6 +27,7 @@ class Setup:
         self.camera_factory = CameraFactory()
         self.can_bus_factory = CanBusFactory()
         self._cameras: Dict[str, ICameraHandler] = {}
+        self.filter = ImageFilter()
         self.can_bus : ICanHandler = None
 
     def initialize_canbus(self):

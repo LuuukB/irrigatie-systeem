@@ -11,7 +11,7 @@ class OfflineCameraHandler(ICameraHandler):
         self.latest_frame = None
         self.running = False
         if self.video_path is None:
-            self.video_path = "/home/luukb/python/video/2025_10_03_11_38_03_013649_smart-sprout.0000.rgb.mp4"
+            self.video_path = "/home/luukb/python/video/2025_12_10_08_57_50_478356_arch-arrow.0000.rgb.mp4"
             self.cap = cv2.VideoCapture(self.video_path)
         else:
             self.cap = cv2.VideoCapture(self.video_path)
@@ -32,7 +32,7 @@ class OfflineCameraHandler(ICameraHandler):
                 if not ret:
                     raise RuntimeError("Kan geen frame meer ophalen uit video")
             self.latest_frame = frame
-            time.sleep(0.03)
+            time.sleep(0.1)
 
     async def get_frame(self):
         while self.latest_frame is None:

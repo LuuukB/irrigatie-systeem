@@ -62,5 +62,7 @@ class HomeScreen(Screen):
             self.ids.oak3.texture = value
 
     def stop(self):
-        self.camera_task.cancel()
-        self.task.cancel()
+        if self.camera_task is not None:
+            self.camera_task.cancel()
+        if self.task is not None:
+            self.task.cancel()
