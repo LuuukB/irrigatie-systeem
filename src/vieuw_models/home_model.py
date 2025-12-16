@@ -6,8 +6,10 @@ from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 
 from processing.image_processor import ImageProcessor
+from processing.cv2_processor import Cv2Processor
 from custom_pdo.can_message_structure import SetupPdo
 from can_bus.i_can_handler import ICanHandler
+from processing.image_filter import ImageFilter
 from setup.setup import Setup
 
 class HomeModel(EventDispatcher):
@@ -17,14 +19,17 @@ class HomeModel(EventDispatcher):
 
     def __init__(self):
         self.setup = Setup()
+        self.cv2_processor = Cv2Processor()
+        self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         self.tasks : List[asyncio.Task] = []
+        self.oak0 = None
 
     async def start_cameras(self):
-        oak0 = await self.setup.get_camera("oak0")
+        self.oak0 = await self.setup.get_camera("oak0")
         oak2 = await self.setup.get_camera("oak2")
         oak3 = await self.setup.get_camera("oak3")
-        self.tasks.append( asyncio.create_task(self.process_stream(oak0, "oak0")))
+        self.tasks.append( asyncio.create_task(self.process_stream(self.oak0, "oak0")))
         self.tasks.append(asyncio.create_task(self.process_stream(oak2, "oak2")))
         self.tasks.append(asyncio.create_task(self.process_stream(oak3, "oak3")))
 
@@ -45,5 +50,6 @@ class HomeModel(EventDispatcher):
 
     async def start(self):
         while True:
-            print("start")
-            await asyncio.sleep(1)
+            frame = await self.oak0.get_frame()
+            self.cv2_processor.get_contours(frame, self.image_filter)
+            await asyncio.sleep(0.01)
