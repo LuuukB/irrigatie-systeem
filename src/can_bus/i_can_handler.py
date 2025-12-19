@@ -8,6 +8,10 @@ class ICanHandler(ABC):
         """Callback for cob_id"""
 
     @abstractmethod
+    def get_speed(self):
+        """"get speed"""
+
+    @abstractmethod
     def send_packet(self, packet: Packet, cob_id: int):
         """send packet to cob_id"""
 

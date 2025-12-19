@@ -11,6 +11,7 @@ from custom_pdo.can_message_structure import SetupPdo
 from can_bus.i_can_handler import ICanHandler
 from processing.image_filter import ImageFilter
 from setup.setup import Setup
+from processing.point_handler import PointHandler
 
 class HomeModel(EventDispatcher):
     oak0_texture = ObjectProperty(None)
@@ -19,11 +20,13 @@ class HomeModel(EventDispatcher):
 
     def __init__(self):
         self.setup = Setup()
-        self.cv2_processor = Cv2Processor()
+        self.point_handler = PointHandler()
+        self.cv2_processor = Cv2Processor(self.point_handler)
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         self.tasks : List[asyncio.Task] = []
         self.oak0 = None
+
 
     async def start_cameras(self):
         self.oak0 = await self.setup.get_camera("oak0")
@@ -49,6 +52,7 @@ class HomeModel(EventDispatcher):
             task.cancel()
 
     async def start(self):
+        asyncio.create_task(self.point_handler.check_distances())
         while True:
             frame = await self.oak0.get_frame()
             self.cv2_processor.get_contours(frame, self.image_filter)

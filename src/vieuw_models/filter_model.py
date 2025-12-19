@@ -9,6 +9,7 @@ from kivy.event import EventDispatcher
 from setup.setup import Setup
 from processing.image_processor import ImageProcessor
 from processing.image_filter import ImageFilter
+from processing.point_handler import PointHandler
 
 class FilterModel(EventDispatcher):
     frame_texture = ObjectProperty(None)

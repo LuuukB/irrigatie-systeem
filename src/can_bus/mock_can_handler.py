@@ -17,6 +17,8 @@ class MockCanHandler(ICanHandler):
         """
         self.callbacks[cob_id].append(callback)
 
+    def get_speed(self):
+        return 0.2
 
     def send_packet(self, packet: Packet, cob_id: int):
         """
@@ -42,6 +44,7 @@ class MockCanHandler(ICanHandler):
         """
         while self._running:
             cob_id, packet = await self._queue.get()
+            print(cob_id, packet)
             await self._dispatch(cob_id, packet)
             await asyncio.sleep(0)
 
