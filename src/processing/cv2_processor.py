@@ -51,10 +51,10 @@ class Cv2Processor:
             except Exception as e:
                 print(e)
 
-        cv2.namedWindow("output", cv2.WINDOW_NORMAL)
-        cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("output", 1200, 900)
-        cv2.resizeWindow("frame", 1200, 900)
-        cv2.imshow("output", img)
-        cv2.imshow("frame", frame)
-        cv2.waitKey(1)
+        #cv2.namedWindow("output", cv2.WINDOW_NORMAL)
+        #cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
+        #cv2.resizeWindow("output", 1200, 900)
+        #cv2.resizeWindow("frame", 1200, 900)
+        #cv2.imshow("output", img)
+        #cv2.imshow("frame", frame)
+        #cv2.waitKey(1)
