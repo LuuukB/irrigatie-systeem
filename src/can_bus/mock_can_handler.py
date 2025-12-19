@@ -2,6 +2,7 @@ import asyncio
 from collections import defaultdict
 from farm_ng.canbus.packet import Packet
 from can_bus.i_can_handler import ICanHandler
+from farm_ng.canbus.canbus_pb2 import Twist2d
 
 class MockCanHandler(ICanHandler):
 
@@ -11,52 +12,25 @@ class MockCanHandler(ICanHandler):
         # Interne queue om "verzonden" berichten te dispatchen
         self._queue = asyncio.Queue()
 
+    def start(self):
+        pass
+
     def register_callback(self, cob_id, callback):
         """
         register a callback to a COB-ID
         """
         self.callbacks[cob_id].append(callback)
 
+    async def send_twist(self, message : Twist2d):
+        print(f"send twist : {message}")
+
+    async def set_speed(self, linear_velocity_x, angular_velocity):
+        print(f"set speed : {linear_velocity_x, angular_velocity}")
+        pass
+
     def get_speed(self):
         return 0.2
 
-    def send_packet(self, packet: Packet, cob_id: int):
-        """
-        places the package in a queue that wil be sent to itself, this way i can check te messages
-        """
-        print(f"Queuing Packet for COB_ID 0x{cob_id:X}: {packet.to_can_data()}")
-
-        self._queue.put_nowait((cob_id, packet))
-
-
-    async def _dispatch(self, cob_id, packet: Packet):
-        """
-        Dispatches a packet to the corresponding callback
-        """
-        if cob_id in self.callbacks:
-            for cb in self.callbacks[cob_id]:
-                cb(packet)
-
-    async def _receive_task(self):
-        """
-        Async loop that waits for message to be send,
-         then returns it as if it was send to this application
-        """
-        while self._running:
-            cob_id, packet = await self._queue.get()
-            print(cob_id, packet)
-            await self._dispatch(cob_id, packet)
-            await asyncio.sleep(0)
-
-    async def run(self):
-        """
-        Start the receive loop
-        """
-        self._running = True
-        asyncio.create_task(self._receive_task())
-
-    def stop(self):
-        """
-        Stops the recieve loop
-        """
-        self._running = False
+    async def send_to_microcontroller(self, destination, message):
+        print(f"send microcontroller message: {destination}")
+        pass

@@ -25,16 +25,17 @@ class HomeModel(EventDispatcher):
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         self.tasks : List[asyncio.Task] = []
-        self.oak0 = None
+        self.oak2 = None
+        self.oak3 = None
 
 
     async def start_cameras(self):
-        self.oak0 = await self.setup.get_camera("oak0")
-        oak2 = await self.setup.get_camera("oak2")
-        oak3 = await self.setup.get_camera("oak3")
-        self.tasks.append( asyncio.create_task(self.process_stream(self.oak0, "oak0")))
-        self.tasks.append(asyncio.create_task(self.process_stream(oak2, "oak2")))
-        self.tasks.append(asyncio.create_task(self.process_stream(oak3, "oak3")))
+        oak0 = await self.setup.get_camera("oak0")
+        self.oak2 = await self.setup.get_camera("oak2")
+        self.oak3 = await self.setup.get_camera("oak3")
+        self.tasks.append( asyncio.create_task(self.process_stream(oak0, "oak0")))
+        self.tasks.append(asyncio.create_task(self.process_stream(self.oak2, "oak2")))
+        self.tasks.append(asyncio.create_task(self.process_stream(self.oak3, "oak3")))
 
     async def process_stream(self, camera, property_name : str):
         while True:
@@ -54,6 +55,8 @@ class HomeModel(EventDispatcher):
     async def start(self):
         asyncio.create_task(self.point_handler.check_distances())
         while True:
-            frame = await self.oak0.get_frame()
-            self.cv2_processor.get_contours(frame, self.image_filter)
+            oak2_frame = await self.oak2.get_frame()
+            oak3_frame = await self.oak3.get_frame()
+            self.cv2_processor.get_contours(oak2_frame, self.image_filter)
+            self.cv2_processor.get_contours(oak3_frame, self.image_filter)
             await asyncio.sleep(0.01)

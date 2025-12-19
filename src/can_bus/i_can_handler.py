@@ -1,32 +1,27 @@
 from abc import ABC, abstractmethod
-from farm_ng.canbus.packet import Packet
+from farm_ng.canbus.canbus_pb2 import Twist2d
 
 class ICanHandler(ABC):
+    @abstractmethod
+    async def start(self):
+        """Start listening on all relevant topics"""
 
     @abstractmethod
-    def register_callback(self, cob_id, callback):
-        """Callback for cob_id"""
+    def register_callback(self, destination: str, callback):
+        """Callback voor een topic"""
+
+    @abstractmethod
+    async def send_twist(self, message : Twist2d):
+        """Stuur een Protobuf message naar een topic"""
+
+    @abstractmethod
+    async def set_speed(self, linear_velocity_x, angular_velocity):
+        """Stuur een Protobuf message naar een topic"""
 
     @abstractmethod
     def get_speed(self):
-        """"get speed"""
+        """Return current speed of amiga in m/s"""
 
     @abstractmethod
-    def send_packet(self, packet: Packet, cob_id: int):
-        """send packet to cob_id"""
-
-    @abstractmethod
-    async def _dispatch(self, msg):
-        """dispatches incoming message to corresponding cob_id"""
-
-    @abstractmethod
-    async def _receive_task(self):
-        """puts recieved packets into queue"""
-
-    @abstractmethod
-    async def run(self):
-        """Start receive loop"""
-
-    @abstractmethod
-    def stop(self):
-        """Stop receive loop"""
+    async def send_to_microcontroller(self, destination, message):
+        """Stuur een Protobuf message naar een topic"""
