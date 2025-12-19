@@ -6,7 +6,7 @@ class Tracker:
     def __init__(self):
         self.tracked_objects = []
         self.next_id = 0
-        self.MAX_DIST = 50
+        self.MAX_DIST = 150
 
     def track_contours(self, contours):
         new_tracked = []

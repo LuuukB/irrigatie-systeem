@@ -20,7 +20,6 @@ class PointHandler:
 
     def handle_point(self, x, y):
 
-        print(f"added point {x} {y}")
         setup = None
         setup_amount = 0
 
@@ -59,7 +58,6 @@ class PointHandler:
                 #loops trough every point in the list and substracts traveld distance from there own distance
                 for setup, crops in self.setups.items():
                     new_crops = []
-                    next_distance = 0
 
                     for crop in crops:
                         crop.distance -= distance_traveled

@@ -44,9 +44,9 @@ class Cv2Processor:
             try:
                 draw_midpoints = self.tracker.track_contours(centroids)
                 for iterations, c, cx, cy in draw_midpoints:
-                    if iterations < 5:
+                    if iterations < 20:
                         cv2.circle(img, (cx, cy), 4, (0, 0, 255), -1)
-                    elif iterations == 5:
+                    elif iterations == 20:
                         self.point_handler.handle_point(cx, cy)
             except Exception as e:
                 print(e)
