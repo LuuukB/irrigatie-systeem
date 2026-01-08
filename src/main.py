@@ -2,7 +2,9 @@
 import argparse
 import asyncio
 import os
+import logging
 from typing import List
+
 
 from amiga_package import ops
 
@@ -33,6 +35,7 @@ class TemplateApp(App):
     """Base class for the main Kivy app."""
 
     def __init__(self) -> None:
+        logger.info("start")
         super().__init__()
         self.setup = Setup()
         self.setup.initialize_canbus()
