@@ -58,7 +58,8 @@ class CanHandler(ICanHandler):
         ):
             message = payload_to_protobuf(event, payload)
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
-            return tpdo1.measured_speed  # m/s
+            return tpdo1.meas_speed
+            #"{:.4f}".format(twist.linear_velocity_x)# m/s
 
         return None
 
