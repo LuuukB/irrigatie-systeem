@@ -61,7 +61,7 @@ class CanHandler(ICanHandler):
     async def _speed_listener(self):
         logger.debug("start looking for speed")
         async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri = Uri(path= "/state"), every_n = 1),
+                SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
         ):
             message = payload_to_protobuf(event, payload)
@@ -72,7 +72,6 @@ class CanHandler(ICanHandler):
                 self.speed = measured_speed # m/s
                 logger.debug(f"tpdo1: {tpdo1}")
                 logger.info(f"changed speed {self.speed}")
-            await asyncio.sleep(0.1)
 
     async def get_speed(self):
         while True:
