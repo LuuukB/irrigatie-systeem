@@ -1,7 +1,7 @@
 import asyncio
-import threading
+
 from pathlib import Path
-from Threading import Lock
+from threading import Lock
 from can_bus.i_can_handler import ICanHandler
 from farm_ng.core.event_client import EventClient
 from farm_ng.core.event_service_pb2 import SubscribeRequest
