@@ -1,6 +1,5 @@
 import asyncio
 import cv2
-import time
 
 from threading import Lock
 from pathlib import Path
@@ -11,7 +10,6 @@ from farm_ng.core.events_file_reader import payload_to_protobuf
 from farm_ng.core.events_file_reader import proto_from_json_file
 from camera.i_camera_handler import ICameraHandler
 from turbojpeg import TurboJPEG
-
 
 class CameraHandler(ICameraHandler):
     def __init__(self, name : str, stream_name: str = "rgb"):
@@ -58,7 +56,7 @@ class CameraHandler(ICameraHandler):
             with self.lock:
                 if self.latest_frame is not None:
                     return self.latest_frame
-            time.sleep(0.001)
+            await asyncio.sleep(0.001)
 
     async def stop(self):
         self.running = False
