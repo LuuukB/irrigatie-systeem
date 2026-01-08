@@ -48,14 +48,14 @@ class CameraHandler(ICameraHandler):
         async for event, payload in self.frame_stream:
             message = payload_to_protobuf(event, payload)
             frame = self.image_decoder.decode(message.image_data)
-            with self._frame_lock:
+            with self.lock:
                 self.latest_frame = frame
 
     async def get_frame(self):
         if not self.client:
             raise RuntimeError("Client niet gestart")
         while True:
-            with self._frame_lock:
+            with self.lock:
                 if self.latest_frame is not None:
                     return self.latest_frame
             time.sleep(0.001)
