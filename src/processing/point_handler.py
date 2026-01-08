@@ -4,6 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from dataclasses import dataclass
+from farm_ng.canbus.canbus_pb2 import RawCanbusMessage
 from custom_pdo.can_message_structure import SetupPdo
 from setup.setup import Setup
 
