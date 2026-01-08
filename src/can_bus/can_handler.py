@@ -1,5 +1,6 @@
 import asyncio
 import logging
+logging.getLogger("grpc").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 from pathlib import Path
