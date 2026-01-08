@@ -15,9 +15,10 @@ class Cv2Processor:
     def get_contours(self, frame, img_filter: ImageFilter = None):
         logger.debug("get contours")
         img = frame.copy()
+
         if img_filter:
             frame = img_filter.apply_filter(frame)
-
+        logger.debug("aplied filter")
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         ret, binary = cv2.threshold(frame_gray, 1, 150, cv2.THRESH_BINARY)
@@ -30,6 +31,8 @@ class Cv2Processor:
         contours, hierarchy = cv2.findContours(
             binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
         )
+
+        logger.debug("found contours")
 
         #cv2.drawContours(image=frame, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2,
          #                lineType=cv2.LINE_AA)
