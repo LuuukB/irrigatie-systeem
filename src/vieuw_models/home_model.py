@@ -26,6 +26,7 @@ class HomeModel(EventDispatcher):
         self.cv2_processor = Cv2Processor(self.point_handler)
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
+        asyncio.create_task(self.can_bus.start())
         self.tasks : List[asyncio.Task] = []
         self.stop_thread = False
         self.oak2 = None
@@ -57,7 +58,7 @@ class HomeModel(EventDispatcher):
 
     async def start(self):
         asyncio.create_task(self.point_handler.check_distances())
-        asyncio.create_task(self.can_bus.start())
+
         logger.info("start looking for crops")
         while True and not self.stop_thread:
             oak2_frame = await self.oak2.get_frame()
