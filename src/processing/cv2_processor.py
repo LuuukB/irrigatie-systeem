@@ -12,7 +12,7 @@ class Cv2Processor:
         self.tracker = Tracker()
         self.point_handler = point_handler
 
-    def get_contours(self, frame, img_filter: ImageFilter = None):
+    def get_contours(self, frame, camera_number, img_filter: ImageFilter = None, ):
         #logger.debug("get contours")
         img = frame.copy()
 
@@ -53,7 +53,7 @@ class Cv2Processor:
                     if iterations < 20:
                         cv2.circle(img, (cx, cy), 4, (0, 0, 255), -1)
                     elif iterations == 20:
-                        self.point_handler.handle_point(cx, cy)
+                        self.point_handler.handle_point(cx, cy, camera_number)
             except Exception as e:
                 print(e)
 

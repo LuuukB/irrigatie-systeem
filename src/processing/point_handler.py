@@ -14,7 +14,18 @@ class Crop:
     distance: float
     setup_amount: int
 
+
+
 class PointHandler:
+    amount_of_cameras = 2
+    amount_of_stroken = 7
+    screen_width = 1920
+    pixels_per_cm = 1920 / 86
+    camera_px = 86 * 22.33
+    overlap_px = 40 * 22.33
+    total_amount_of_pixels = (amount_of_cameras * camera_px) - (
+            (amount_of_cameras - 1) * overlap_px)
+
     def __init__(self):
         self.setups = {1:[], 2:[], 3:[], 4:[]}
         self.old_time = 0
@@ -22,14 +33,20 @@ class PointHandler:
         self.setup = Setup()
         self.can_bus = self.setup.can_bus
 
-    def handle_point(self, x, y):
+    def handle_point(self, x, y, camera_number):
 
         setup = None
         setup_amount = 0
 
+        if camera_number > 0:
+            width = x + (self.screen_width * camera_number - self.overlap_px * camera_number)
+        else:
+            width = x
+        step = self.total_amount_of_pixels // self.amount_of_stroken
+
         #check in witch setup_list point should go
-        for i in range(8):
-            if ((i-1)*192) < x < (i * 192):
+        for i in range(self.amount_of_cameras):
+            if ((i-1)*step) < width < (i * step):
                 setup = i // 2 + 1
                 setup_amount = i % 2 + 1
 
