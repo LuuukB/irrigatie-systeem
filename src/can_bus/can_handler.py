@@ -53,7 +53,7 @@ class CanHandler(ICanHandler):
 
     async def get_speed(self):
         async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri="/state", every_n=1),
+                SubscribeRequest({"uri": "/state", "every_n": 3}),
                 decode=False,
         ):
             message = payload_to_protobuf(event, payload)
