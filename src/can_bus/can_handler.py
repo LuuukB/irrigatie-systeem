@@ -71,7 +71,6 @@ class CanHandler(ICanHandler):
             with self.lock:
                 self.speed = measured_speed # m/s
                 logger.info("changed speed")
-            await asyncio.sleep(0.5)
 
     async def get_speed(self):
         while True:
