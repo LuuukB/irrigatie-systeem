@@ -1,4 +1,5 @@
 import asyncio
+import threading
 from pathlib import Path
 from Threading import Lock
 from can_bus.i_can_handler import ICanHandler
