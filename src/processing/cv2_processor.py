@@ -13,7 +13,7 @@ class Cv2Processor:
         self.point_handler = point_handler
 
     def get_contours(self, frame, img_filter: ImageFilter = None):
-        logger.debug("get contours")
+        #logger.debug("get contours")
         img = frame.copy()
 
         if img_filter:
