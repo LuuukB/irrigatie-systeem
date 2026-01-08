@@ -59,20 +59,21 @@ class CanHandler(ICanHandler):
         await self.send_twist(twist)
 
     async def _speed_listener(self):
-        logger.debug("start looking for speed")
-        async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri = Uri(path= "/state"), every_n = 10),
-                decode=False,
-        ):
-            try:
-                message = payload_to_protobuf(event, payload)
-                logger.info("changed speed")
-                tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
-                measured_speed = tpdo1.meas_speed
-                with self.lock:
-                    self.speed = measured_speed # m/s
-            except BlockingIOError:
-                await asyncio.sleep(0.05)
+        #logger.debug("start looking for speed")
+        #async for event, payload in self.client.subscribe(
+        #        SubscribeRequest(uri = Uri(path= "/state"), every_n = 10),
+        #        decode=False,
+        #):
+        #    try:
+        #        message = payload_to_protobuf(event, payload)
+        #        logger.info("changed speed")
+        #        tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
+        #        measured_speed = tpdo1.meas_speed
+        #        with self.lock:
+        #            self.speed = measured_speed # m/s
+         #   except BlockingIOError:
+          #      await asyncio.sleep(0.05)
+            self.speed = 0.2
             await asyncio.sleep(0.5)
 
     async def get_speed(self):
