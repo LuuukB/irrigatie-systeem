@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from Threading import Lock
 from can_bus.i_can_handler import ICanHandler
 from farm_ng.core.event_client import EventClient
 from farm_ng.core.event_service_pb2 import SubscribeRequest
@@ -21,6 +22,8 @@ class CanHandler(ICanHandler):
         config = proto_from_json_file(service_config_path, EventServiceConfigList())
         self.max_speed = 0.1
         self.max_angular_rate = 0.1
+        self.speed = 0
+        self.lock = Lock()
         print("create canbus")
 
         for cfg in config.configs:
@@ -29,6 +32,7 @@ class CanHandler(ICanHandler):
                 print("canbus started")
                 self.callbacks = {}
                 self._listening = False
+                asyncio.create_task(self._speed_listener())
 
     async def start(self):
         if not self._listening:
@@ -51,16 +55,23 @@ class CanHandler(ICanHandler):
         twist.angular_velocity = self.max_angular_rate * angular_velocity
         await self.send_twist(twist)
 
-    async def get_speed(self):
+    async def _speed_listener(self):
         async for event, payload in self.client.subscribe(
                 SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
         ):
             message = payload_to_protobuf(event, payload)
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
-            return tpdo1.meas_speed # m/s
+            measured_speed = tpdo1.measured_speed
+            with self.lock:
+                self.speed = measured_speed # m/s
 
-        return None
+    async def get_speed(self):
+        while True:
+            with self.lock:
+                if self.speed is not None:
+                    return self.speed
+            await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
         print(f"{message}")

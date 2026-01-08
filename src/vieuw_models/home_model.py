@@ -61,8 +61,6 @@ class HomeModel(EventDispatcher):
         while True and not self.stop_thread:
             oak2_frame = await self.oak2.get_frame()
             oak3_frame = await self.oak3.get_frame()
-            logger.debug("frames loaded")
             self.cv2_processor.get_contours(oak2_frame, self.image_filter)
             self.cv2_processor.get_contours(oak3_frame, self.image_filter)
-            logger.debug("contours loaded")
             await asyncio.sleep(0.1)
