@@ -1,5 +1,8 @@
 import asyncio
 import cv2
+import time
+
+from threading import Lock
 from pathlib import Path
 from farm_ng.core.event_client import EventClient
 from farm_ng.core.event_service_pb2 import EventServiceConfigList
@@ -22,6 +25,7 @@ class CameraHandler(ICameraHandler):
         self.running = False
         self.frame_stream = None
         self.latest_frame = None
+        self.lock = Lock()
         self.image_decoder = TurboJPEG()
 
     async def start(self):
@@ -43,14 +47,18 @@ class CameraHandler(ICameraHandler):
     async def reader(self):
         async for event, payload in self.frame_stream:
             message = payload_to_protobuf(event, payload)
-            self.latest_frame = self.image_decoder.decode(message.image_data)
+            frame = self.image_decoder.decode(message.image_data)
+            with self._frame_lock:
+                self.latest_frame = frame
 
     async def get_frame(self):
         if not self.client:
             raise RuntimeError("Client niet gestart")
-        while self.latest_frame is None:
-            await asyncio.sleep(0.001)
-        return self.latest_frame
+        while True:
+            with self._frame_lock:
+                if self.latest_frame is not None:
+                    return self.latest_frame
+            time.sleep(0.001)
 
     async def stop(self):
         self.running = False
