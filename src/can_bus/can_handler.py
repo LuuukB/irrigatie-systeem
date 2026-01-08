@@ -58,10 +58,13 @@ class CanHandler(ICanHandler):
 
     async def _speed_listener(self):
         async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri = Uri(path= "/state"), every_n = 15),
+                SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
         ):
-            message = payload_to_protobuf(event, payload)
+            try:
+                message = payload_to_protobuf(event, payload)
+            except Exception as e:
+                logger.error(e)
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
             measured_speed = tpdo1.meas_speed
             with self.lock:
