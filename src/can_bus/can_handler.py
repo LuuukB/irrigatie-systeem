@@ -70,6 +70,7 @@ class CanHandler(ICanHandler):
             measured_speed = tpdo1.meas_speed
             with self.lock:
                 self.speed = measured_speed # m/s
+                logger.debug(f"speed: {measured_speed}")
 
     async def get_speed(self):
         while True:
