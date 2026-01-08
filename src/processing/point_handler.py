@@ -59,7 +59,7 @@ class PointHandler:
                 #check_distance
                 logger.debug(f"found crops")
                 distance_traveled = await self.calculate_distance_traveled()
-
+                logger.debug("distance_traveled done")
                 #loops trough every point in the list and substracts traveld distance from there own distance
                 for setup, crops in self.setups.items():
                     new_crops = []
