@@ -69,8 +69,8 @@ class PointHandler:
                         # if distance < 2 (staat niet vast is idee) sent give water message (amount depends on how many setups)
                         if crop.distance <= 20:
                             #send give water message
-                            await self.can_bus.send_to_microcontroller(message = SetupPdo(command=2, amount=crop.x), id = 0x300 + setup)
-                            await self.can_bus.send_to_microcontroller(message = SetupPdo(command = 1, amount = int(500 / crop.setup_amount)), id = 0x300 + setup)
+                            await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(data = SetupPdo(command=2, amount=crop.x), id = 0x300 + setup))
+                            await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(data = SetupPdo(command = 1, amount = int(500 / crop.setup_amount)), id = 0x300 + setup))
                             continue
                         else:
                             new_crops.append(crop)
@@ -97,8 +97,6 @@ class PointHandler:
         logger.debug(f"current speed: {current_speed}")
 
         distance_traveled = current_speed * forgone_time * 1000
-        #print(forgone_time)
-        #print(distance_traveled)
 
         return distance_traveled
 
