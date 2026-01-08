@@ -1,6 +1,5 @@
 import asyncio
 import logging
-logging.getLogger("grpc").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 
 from pathlib import Path
@@ -65,15 +64,12 @@ class CanHandler(ICanHandler):
                 SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
         ):
-            try:
-                message = payload_to_protobuf(event, payload)
-                logger.info("changed speed")
-                tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
-                measured_speed = tpdo1.meas_speed
-                with self.lock:
-                    self.speed = measured_speed # m/s
-            except BlockingIOError:
-                await asyncio.sleep(0.05)
+            message = payload_to_protobuf(event, payload)
+            logger.info("changed speed")
+            tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
+            measured_speed = tpdo1.meas_speed
+            with self.lock:
+                self.speed = measured_speed # m/s
             await asyncio.sleep(0.5)
 
     async def get_speed(self):
