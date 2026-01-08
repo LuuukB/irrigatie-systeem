@@ -66,6 +66,7 @@ class PointHandler:
 
                     for crop in crops:
                         crop.distance -= distance_traveled
+                        logger.info(f"distance left is {crop.distance}")
                         # if distance < 2 (staat niet vast is idee) sent give water message (amount depends on how many setups)
                         if crop.distance <= 20:
                             #send give water message
