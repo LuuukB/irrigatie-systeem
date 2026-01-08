@@ -65,11 +65,12 @@ class CanHandler(ICanHandler):
                 decode=False,
         ):
             message = payload_to_protobuf(event, payload)
-            logger.info("changed speed")
+
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
             measured_speed = tpdo1.meas_speed
             with self.lock:
                 self.speed = measured_speed # m/s
+                logger.info("changed speed")
             await asyncio.sleep(0.5)
 
     async def get_speed(self):
