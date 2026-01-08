@@ -63,5 +63,4 @@ class HomeModel(EventDispatcher):
             oak3_frame = await self.oak3.get_frame()
             self.cv2_processor.get_contours(oak2_frame, self.image_filter)
             self.cv2_processor.get_contours(oak3_frame, self.image_filter)
-            logger.debug("end")
             await asyncio.sleep(0.1)
