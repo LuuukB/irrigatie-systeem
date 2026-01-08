@@ -18,6 +18,7 @@ class HomeScreen(Screen):
         self.vm = HomeModel()
         self.camera_task: asyncio.Task = None
         self.task :asyncio.Task = None
+        self.thread = None
         self.start_task = False
         self.vm.bind(oak0_texture=self.update_oak0)
         self.vm.bind(oak2_texture=self.update_oak2)
@@ -42,11 +43,14 @@ class HomeScreen(Screen):
         print(self.start_task)
         if self.start_task:
             print("start")
-            self.task = asyncio.create_task(self.vm.start())
+
+            self.thread = threading.Thread(target=lambda: asyncio.run(self.vm.start()), daemon=True)
+            self.thread.start()
+
             self.ids.start_stop_btn.text = "stop"
         else:
             print("stop")
-            self.task.cancel()
+            self.vm.stop_thread = True
             self.ids.start_stop_btn.text = "start"
 
     def update_oak0(self,instance, value):

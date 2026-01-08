@@ -11,7 +11,6 @@ class Cv2Processor:
     def __init__(self, point_handler=None):
         self.tracker = Tracker()
         self.point_handler = point_handler
-        pass
 
     def get_contours(self, frame, img_filter: ImageFilter = None):
         logger.debug("get contours")
