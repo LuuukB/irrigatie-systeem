@@ -61,10 +61,8 @@ class CanHandler(ICanHandler):
                 SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
         ):
-            try:
-                message = payload_to_protobuf(event, payload)
-            except Exception as e:
-                logger.error(e)
+            message = payload_to_protobuf(event, payload)
+            logger.info("changed speed")
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
             measured_speed = tpdo1.meas_speed
             with self.lock:
