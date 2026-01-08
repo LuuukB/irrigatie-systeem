@@ -95,10 +95,8 @@ class PointHandler:
         
         current_speed = await self.can_bus.get_speed()
         logger.debug(f"current speed: {current_speed}")
-        average_speed = (current_speed + self.old_speed) / 2
-        self.old_speed = current_speed
 
-        distance_traveled = average_speed * forgone_time * 1000
+        distance_traveled = current_speed * forgone_time * 1000
         #print(forgone_time)
         #print(distance_traveled)
 
