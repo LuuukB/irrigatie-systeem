@@ -58,7 +58,7 @@ class PointHandler:
             if any(crops for crops in self.setups.values()):
                 #check_distance
                 logger.debug(f"found crops")
-                distance_traveled = self.calculate_distance_traveled()
+                distance_traveled = await self.calculate_distance_traveled()
 
                 #loops trough every point in the list and substracts traveld distance from there own distance
                 for setup, crops in self.setups.items():
@@ -86,14 +86,14 @@ class PointHandler:
             await asyncio.sleep(0.1)
 
     #def hulp methode die met gegeven snelheid en huidige punt nieuwe x coordinaat berekend
-    def calculate_distance_traveled(self):
+    async def calculate_distance_traveled(self):
         #gets the current time
         #calculates past distance in given stime stack
         current_time = time.monotonic()
         forgone_time = current_time - self.old_time
         self.old_time = current_time
         
-        current_speed = self.can_bus.get_speed()
+        current_speed = await self.can_bus.get_speed()
         logger.debug(f"current speed: {current_speed}")
         average_speed = (current_speed + self.old_speed) / 2
         self.old_speed = current_speed
