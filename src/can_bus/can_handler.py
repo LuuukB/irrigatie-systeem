@@ -52,14 +52,17 @@ class CanHandler(ICanHandler):
         await self.send_twist(twist)
 
     async def get_speed(self):
-        async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
-                decode=False,
-        ):
-            message = payload_to_protobuf(event, payload)
-            tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
-            return tpdo1.meas_speed
-            #"{:.4f}".format(twist.linear_velocity_x)# m/s
+        subscription = self.client.subscribe(
+            SubscribeRequest(uri=Uri(path="/state"), every_n=3),
+            decode=False,
+        )
+        try:
+            event, payload = await anext(subscription)  # haalt 1 event op
+        except StopAsyncIteration:
+            return None  # geen events beschikbaar
+        message = payload_to_protobuf(event, payload)
+        tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
+        return tpdo1.meas_speed # m/s
 
         return None
 
