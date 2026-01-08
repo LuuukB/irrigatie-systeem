@@ -30,6 +30,7 @@ from kivy.lang.builder import Builder  # noqa: E402
 from setup.setup import Setup
 from screens.home_screen import HomeScreen
 from screens.filter_screen import FilterScreen
+logger = logging.getLogger(__name__)
 
 class TemplateApp(App):
     """Base class for the main Kivy app."""
