@@ -1,5 +1,8 @@
 import cv2
 import numpy as np
+import logging
+logger = logging.getLogger(__name__)
+
 from processing.image_filter import ImageFilter
 from processing.tracker import Tracker
 from processing.point_handler import PointHandler
@@ -11,6 +14,7 @@ class Cv2Processor:
         pass
 
     def get_contours(self, frame, img_filter: ImageFilter = None):
+        logger.debug("get contours")
         img = frame.copy()
         if img_filter:
             frame = img_filter.apply_filter(frame)

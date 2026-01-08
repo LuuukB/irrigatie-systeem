@@ -1,5 +1,7 @@
 import asyncio
 import cv2
+import logging
+logger = logging.getLogger(__name__)
 
 from kivy.graphics.texture import Texture
 from kivy.properties import ObjectProperty
@@ -54,6 +56,7 @@ class HomeModel(EventDispatcher):
 
     async def start(self):
         asyncio.create_task(self.point_handler.check_distances())
+        logger.info("start looking for crops")
         while True:
             oak2_frame = await self.oak2.get_frame()
             oak3_frame = await self.oak3.get_frame()

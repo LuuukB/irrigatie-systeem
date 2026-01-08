@@ -1,5 +1,8 @@
 import time
 import asyncio
+import logging
+logger = logging.getLogger(__name__)
+
 from dataclasses import dataclass
 from custom_pdo.can_message_structure import SetupPdo
 from setup.setup import Setup
@@ -39,6 +42,7 @@ class PointHandler:
             for i in range(setup_amount):
                 self.setups[setup + (i - 1)].append(crop)
                 print(f"added crop {crop} to setup {setup + (i - 1)}")
+                loggin.info(f"added crop {crop} to setup {setup + (i - 1)}")
         else:
             print("out of scope")
             print(setup, setup_amount)
@@ -53,6 +57,7 @@ class PointHandler:
 
             if any(crops for crops in self.setups.values()):
                 #check_distance
+                logger.debug(f"found crops")
                 distance_traveled = self.calculate_distance_traveled()
 
                 #loops trough every point in the list and substracts traveld distance from there own distance
