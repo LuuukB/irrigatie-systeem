@@ -91,13 +91,11 @@ class PointHandler:
         #calculates past distance in given stime stack
         current_time = time.monotonic()
         forgone_time = current_time - self.old_time
-        logger.info(f"forgone time is {forgone_time}")
         self.old_time = current_time
         
         current_speed = await self.can_bus.get_speed()
         logger.debug(f"current speed: {current_speed}")
         average_speed = (current_speed + self.old_speed) / 2
-        logger.info(f"average speed: {average_speed}")
         self.old_speed = current_speed
 
         distance_traveled = average_speed * forgone_time * 1000
