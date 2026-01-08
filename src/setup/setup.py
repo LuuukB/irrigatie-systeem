@@ -22,7 +22,6 @@ class Setup:
             return
 
         self._initialized = True
-        self.task: asyncio.Task = None
         self.robot_online = True
         self.camera_factory = CameraFactory()
         self.can_bus_factory = CanBusFactory()
@@ -58,4 +57,3 @@ class Setup:
 
     async def stop(self):
         await self.camera_factory.stop_all()
-        self.task.cancel()
