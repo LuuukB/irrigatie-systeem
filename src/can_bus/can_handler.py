@@ -57,6 +57,7 @@ class CanHandler(ICanHandler):
         await self.send_twist(twist)
 
     async def _speed_listener(self):
+        logger.debug("start looking for speed")
         async for event, payload in self.client.subscribe(
                 SubscribeRequest(uri = Uri(path= "/state"), every_n = 3),
                 decode=False,
