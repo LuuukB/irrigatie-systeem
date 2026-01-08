@@ -58,7 +58,7 @@ class CanHandler(ICanHandler):
 
     async def _speed_listener(self):
         async for event, payload in self.client.subscribe(
-                SubscribeRequest(uri = Uri(path= "/state"), every_n = 10),
+                SubscribeRequest(uri = Uri(path= "/state"), every_n = 15),
                 decode=False,
         ):
             message = payload_to_protobuf(event, payload)
