@@ -51,7 +51,7 @@ class Cv2Processor:
                 draw_midpoints = self.tracker.track_contours(centroids)
                 for iterations, c, cx, cy in draw_midpoints:
                     if iterations < 20:
-                        logger.debug("found points")
+                        logger.debug(f"found points with {iterations} iterations")
                         cv2.circle(img, (cx, cy), 4, (0, 0, 255), -1)
                     elif iterations == 20:
                         self.point_handler.handle_point(cx, cy, camera_number)
