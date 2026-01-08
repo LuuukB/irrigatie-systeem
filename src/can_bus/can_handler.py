@@ -70,8 +70,8 @@ class CanHandler(ICanHandler):
             measured_speed = tpdo1.meas_speed
             with self.lock:
                 self.speed = measured_speed # m/s
-                logger.info("changed speed")
-            await asyncio.sleep(1)
+                logger.info(f"changed speed {self.speed}")
+            await asyncio.sleep(0.5)
 
     async def get_speed(self):
         while True:
