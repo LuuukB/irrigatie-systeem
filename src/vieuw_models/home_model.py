@@ -58,7 +58,7 @@ class HomeModel(EventDispatcher):
     async def start(self):
         asyncio.create_task(self.point_handler.check_distances())
         logger.info("start looking for crops")
-        while True and self.stop_thread:
+        while True and not self.stop_thread:
             oak2_frame = await self.oak2.get_frame()
             oak3_frame = await self.oak3.get_frame()
             self.cv2_processor.get_contours(oak2_frame, self.image_filter)
