@@ -33,12 +33,12 @@ class CanHandler(ICanHandler):
                 print("canbus started")
                 self.callbacks = {}
                 self._listening = False
-                asyncio.create_task(self._speed_listener())
 
     async def start(self):
         if not self._listening:
-            asyncio.create_task(self._listen("/twist"))
-            asyncio.create_task(self._listen("/can_message"))
+            asyncio.create_task(self._speed_listener())
+            #asyncio.create_task(self._listen("/twist"))
+            #asyncio.create_task(self._listen("/can_message"))
             self._listening = True
 
     def register_callback(self, destination, callback):
