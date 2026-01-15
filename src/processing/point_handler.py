@@ -66,6 +66,8 @@ class PointHandler:
                     self.setups[setup + (i - 1)].append(crop)
                     print(f"added crop {crop} to setup {setup + (i - 1)}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
+                else:
+                    logger.info(f"skipped crop {crop}")
         else:
             print("out of scope")
             print(setup, setup_amount, x)
