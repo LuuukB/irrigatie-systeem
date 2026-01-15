@@ -58,8 +58,7 @@ class HomeModel(EventDispatcher):
             task.cancel()
 
     async def start(self):
-        asyncio.create_task(self.oak2_point_handler.check_distances())
-        asyncio.create_task(self.oak3_point_handler.check_distances())
+        asyncio.create_task(self.point_handler.check_distances())
 
         logger.info("start looking for crops")
         while True and not self.stop_thread:
