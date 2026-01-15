@@ -53,13 +53,10 @@ class CameraHandler(ICameraHandler):
         if not self.client:
             raise RuntimeError("Client niet gestart")
         while True:
-            try:
-                with self.lock:
-                    if self.latest_frame is not None:
-                        return self.latest_frame
-            except Exception as e:
-                print(e)
-            await asyncio.sleep(1)
+            with self.lock:
+                if self.latest_frame is not None:
+                    return self.latest_frame
+            await asyncio.sleep(0.001)
 
     async def stop(self):
         self.running = False
