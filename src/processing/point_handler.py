@@ -104,7 +104,7 @@ class PointHandler:
 
                         if not any(
                                 abs(c.distance - crop.distance) <= tolerance
-                                and abs(c.width - crop.width) <= tolerance
+                                and abs(c.x - crop.x) <= tolerance
                                 for c in new_crops
                         ):
                             new_crops.append(crop)
