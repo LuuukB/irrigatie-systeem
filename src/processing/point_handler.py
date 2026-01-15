@@ -151,6 +151,7 @@ class PointHandler:
                     abs(crop["distance"] - new_crop["distance"]) <= tolerance
                     and abs(crop["width"] - new_crop["width"]) <= tolerance
             ):
+                logger.debug(f"{crop} already in setup {setup}")
                 return True
         return False
 
