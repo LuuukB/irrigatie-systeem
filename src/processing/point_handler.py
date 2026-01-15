@@ -62,13 +62,9 @@ class PointHandler:
         if setup is not None and setup_amount > 0:
             crop = Crop(x = width, distance = distance, setup_amount = setup_amount)
             for i in range(setup_amount):
-                if not self._check_crop(crop,self.setups[setup + (i - 1)] ):
-                    self.setups[setup + (i - 1)].append(crop)
-                    print(f"added crop {crop} to setup {setup + (i - 1)}")
-                    logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
-                else:
-                    logger.debug(f"crop already exists in setup {setup + (i - 1)}")
-                    logger.debug(f"{self.setups[setup + (i - 1)]}")
+                self.setups[setup + (i - 1)].append(crop)
+                print(f"added crop {crop} to setup {setup + (i - 1)}")
+                logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
         else:
             print("out of scope")
             print(setup, setup_amount, x)
@@ -105,8 +101,15 @@ class PointHandler:
                                     amount = int(500 / crop.setup_amount)).to_can_data(),
                                 id = 0x300 + setup))
                             continue
-                        else:
+
+                        if not any(
+                                abs(c.distance - crop.distance) <= tolerance
+                                and abs(c.width - crop.width) <= tolerance
+                                for c in new_crops
+                        ):
                             new_crops.append(crop)
+                        else:
+                            logger.debug(f"Duplicate crop skipped: {crop}")
 
                     self.setups[setup] = new_crops
 
@@ -145,13 +148,4 @@ class PointHandler:
         else:
             return distance + 30 #extra afstand bij turnen
 
-    def _check_crop(self, new_crop : Crop, setup, tolerance = 50):
-        for crop in setup:
-            if (
-                    abs(crop["distance"] - new_crop["distance"]) <= tolerance
-                    and abs(crop["width"] - new_crop["width"]) <= tolerance
-            ):
-                logger.debug(f"{crop} already in setup {setup}")
-                return True
-        return False
 
