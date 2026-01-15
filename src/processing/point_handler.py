@@ -156,7 +156,7 @@ class PointHandler:
         for crop in setup:
             if (
                     abs(crop.distance - new_crop.distance) <= tolerance
-                    and abs(crop.width - new_crop.width) <= tolerance
+                    and abs(crop.x - new_crop.x) <= tolerance
             ):
                 return True
         return False
