@@ -45,7 +45,7 @@ class PointHandler:
         else:
             width = x
         step = self.total_amount_of_pixels // self.amount_of_stroken
-        logger.info(step, width)
+        logger.info(f"{step} {width}")
 
         #check in witch setup_list point should go
         for i in range(self.amount_of_stroken):
