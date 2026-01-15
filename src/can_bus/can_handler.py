@@ -68,6 +68,7 @@ class CanHandler(ICanHandler):
 
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
             measured_speed = tpdo1.meas_speed
+            logger.debug("listen")
             with self.lock:
                 self.speed = measured_speed # m/s
 
@@ -79,7 +80,7 @@ class CanHandler(ICanHandler):
                         return self.speed
             except Exception as e:
                 print(f"errror {e}")
-            await asyncio.sleep(4)
+            await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
         print(f"{message}")
