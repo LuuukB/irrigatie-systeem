@@ -44,7 +44,7 @@ class HomeScreen(Screen):
         print(self.start_task)
         if self.start_task:
             print("start")
-
+            self.vm.stop_thread = True
             self.thread = threading.Thread(target=lambda: asyncio.run(self.vm.start()), daemon=True)
             self.thread.start()
 
