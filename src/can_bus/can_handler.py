@@ -79,7 +79,7 @@ class CanHandler(ICanHandler):
                         return self.speed
             except Exception as e:
                 print(f"errror {e}")
-            await asyncio.sleep(0.001)
+            await asyncio.sleep(1)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
         print(f"{message}")
