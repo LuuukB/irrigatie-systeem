@@ -22,10 +22,9 @@ class HomeModel(EventDispatcher):
 
     def __init__(self):
         self.setup = Setup()
-        self.oak2_point_handler = PointHandler()
-        self.oak3_point_handler = PointHandler()
-        self.oak2_processor = Cv2Processor(self.oak2_point_handler)
-        self.oak3_processor = Cv2Processor(self.oak3_point_handler)
+        self.point_handler = PointHandler()
+        self.oak2_processor = Cv2Processor(self.point_handler)
+        self.oak3_processor = Cv2Processor(self.point_handler)
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         asyncio.create_task(self.can_bus.start())
