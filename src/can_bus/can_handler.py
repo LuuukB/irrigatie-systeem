@@ -68,7 +68,6 @@ class CanHandler(ICanHandler):
 
             tpdo1 = AmigaTpdo1.from_proto(message.amiga_tpdo1)
             measured_speed = tpdo1.meas_speed
-            logger.debug("listen")
             with self.lock:
                 self.speed = measured_speed # m/s
 
