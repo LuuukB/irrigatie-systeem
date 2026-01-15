@@ -98,12 +98,13 @@ class PointHandler:
                                     command=2,
                                     amount=crop.x).to_can_data(),
                                 id = 0x300 + setup))
+                            logger.debug("done sending")
 
-                            await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
-                                data = SetupPdo(
-                                    command = 1,
-                                    amount = int(500 / crop.setup_amount)).to_can_data(),
-                                id = 0x300 + setup))
+                            #await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
+                            #    data = SetupPdo(
+                            #        command = 1,
+                            #        amount = int(500 / crop.setup_amount)).to_can_data(),
+                            #    id = 0x300 + setup))
                             continue
 
                         if not any(
