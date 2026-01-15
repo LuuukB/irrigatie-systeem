@@ -73,9 +73,12 @@ class CanHandler(ICanHandler):
 
     async def get_speed(self):
         while True:
-            with self.lock:
-                if self.speed is not None:
-                    return self.speed
+            try:
+                with self.lock:
+                    if self.speed is not None:
+                        return self.speed
+            except Exception as e:
+                print(f"errror {e}")
             await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
