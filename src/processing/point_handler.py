@@ -38,9 +38,10 @@ class PointHandler:
         setup = None
         setup_amount = 0
 
-        print(x)
+        logger.debug(f"Camera {camera_number} has x {x}")
         if camera_number > 0:
             width = x + (self.screen_width * camera_number - self.overlap_px * camera_number)
+            logger.debug(f"added {width - x} to x {x} coming to width {width}")
         else:
             width = x
         step = self.total_amount_of_pixels // self.amount_of_stroken
