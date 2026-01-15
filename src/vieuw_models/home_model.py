@@ -22,8 +22,10 @@ class HomeModel(EventDispatcher):
 
     def __init__(self):
         self.setup = Setup()
-        self.point_handler = PointHandler()
-        self.cv2_processor = Cv2Processor(self.point_handler)
+        self.oak2_point_handler = PointHandler()
+        self.oak3_point_handler = PointHandler()
+        self.oak2_processor = Cv2Processor(self.oak2_point_handler)
+        self.oak3_processor = Cv2Processor(self.oak3_point_handler)
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         asyncio.create_task(self.can_bus.start())
@@ -57,14 +59,15 @@ class HomeModel(EventDispatcher):
             task.cancel()
 
     async def start(self):
-        asyncio.create_task(self.point_handler.check_distances())
+        asyncio.create_task(self.oak2_point_handler.check_distances())
+        asyncio.create_task(self.oak3_point_handler.check_distances())
 
         logger.info("start looking for crops")
         while True and not self.stop_thread:
             oak2_frame = await self.oak2.get_frame()
             oak3_frame = await self.oak3.get_frame()
 
-            self.cv2_processor.get_contours(oak2_frame, 0, self.image_filter)
-            self.cv2_processor.get_contours(oak3_frame, 1, self.image_filter)
+            self.oak2_processor.get_contours(oak2_frame, 0, self.image_filter)
+            self.oak3_processor.get_contours(oak3_frame, 1, self.image_filter)
 
             await asyncio.sleep(0.1)

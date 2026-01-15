@@ -38,15 +38,18 @@ class PointHandler:
         setup = None
         setup_amount = 0
 
+        print(x)
         if camera_number > 0:
             width = x + (self.screen_width * camera_number - self.overlap_px * camera_number)
         else:
             width = x
         step = self.total_amount_of_pixels // self.amount_of_stroken
+        print(step, width)
 
         #check in witch setup_list point should go
-        for i in range(self.amount_of_cameras):
+        for i in range(self.amount_of_stroken):
             if ((i-1)*step) < width < (i * step):
+                print("jahoor setup gevonden")
                 setup = i // 2 + 1
                 setup_amount = i % 2 + 1
 
@@ -63,7 +66,7 @@ class PointHandler:
                 logger.info(f"added crop {crop} to setup {setup + (i - 1)}")
         else:
             print("out of scope")
-            print(setup, setup_amount)
+            print(setup, setup_amount, x)
         pass
 
     #def loop die constand de lijst checkt op waar welk punt is

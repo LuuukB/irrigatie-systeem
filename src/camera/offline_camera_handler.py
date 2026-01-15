@@ -3,6 +3,7 @@ import threading
 import time
 import cv2
 
+from threading import Lock
 from camera.i_camera_handler import ICameraHandler
 
 class OfflineCameraHandler(ICameraHandler):
@@ -10,6 +11,7 @@ class OfflineCameraHandler(ICameraHandler):
         self.video_path = video_path
         self.latest_frame = None
         self.running = False
+        self.lock = Lock()
         if self.video_path is None:
             self.video_path = "/home/luukb/python/video/test2oak2.rgb.mp4"
             self.cap = cv2.VideoCapture(self.video_path)
@@ -31,13 +33,16 @@ class OfflineCameraHandler(ICameraHandler):
                 ret, frame = self.cap.read()
                 if not ret:
                     raise RuntimeError("Kan geen frame meer ophalen uit video")
-            self.latest_frame = frame
+            with self.lock:
+                self.latest_frame = frame
             time.sleep(0.3)
 
     async def get_frame(self):
-        while self.latest_frame is None:
+        while True:
+            with self.lock:
+                if self.latest_frame is not None:
+                    return self.latest_frame
             await asyncio.sleep(0.001)
-        return self.latest_frame
 
     async def stop(self):
         self.running = False

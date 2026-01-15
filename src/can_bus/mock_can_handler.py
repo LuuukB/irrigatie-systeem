@@ -12,7 +12,7 @@ class MockCanHandler(ICanHandler):
         # Interne queue om "verzonden" berichten te dispatchen
         self._queue = asyncio.Queue()
 
-    def start(self):
+    async def start(self):
         pass
 
     def register_callback(self, cob_id, callback):
@@ -28,9 +28,10 @@ class MockCanHandler(ICanHandler):
         print(f"set speed : {linear_velocity_x, angular_velocity}")
         pass
 
-    def get_speed(self):
+    async def get_speed(self):
+        await asyncio.sleep(0.01)
         return 0.2
 
-    async def send_to_microcontroller(self, destination, message):
-        print(f"send microcontroller message: {destination}")
+    async def send_to_microcontroller(self,  message):
+        print(f"send microcontroller message: {message}")
         pass
