@@ -71,7 +71,7 @@ class PointHandler:
 
     #def loop die constand de lijst checkt op waar welk punt is
     async def check_distances(self):
-
+        tolerance = 50
         self.old_time = time.monotonic()
         self.old_speed = 0.2
         while True:
