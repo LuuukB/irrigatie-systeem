@@ -78,7 +78,7 @@ class PointHandler:
 
             if any(crops for crops in self.setups.values()):
                 #check_distance
-                logger.debug(f"found crops")
+                #logger.debug(f"found crops")
                 distance_traveled = await self.calculate_distance_traveled()
                 #loops trough every point in the list and substracts traveld distance from there own distance
                 for setup, crops in self.setups.items():
@@ -123,7 +123,7 @@ class PointHandler:
         self.old_time = current_time
         
         current_speed = await self.can_bus.get_speed()
-        logger.debug(f"current speed: {current_speed}")
+        #logger.debug(f"current speed: {current_speed}")
 
         distance_traveled = current_speed * forgone_time * 1000
 
