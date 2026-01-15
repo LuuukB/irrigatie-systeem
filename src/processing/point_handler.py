@@ -22,7 +22,7 @@ class PointHandler:
     screen_width = 1920
     pixels_per_cm = 1920 / 86
     camera_px = 86 * 22.33
-    overlap_px = 40 * 22.33
+    overlap_px = 30 * 22.33
     total_amount_of_pixels = (amount_of_cameras * camera_px) - (
             (amount_of_cameras - 1) * overlap_px)
 
