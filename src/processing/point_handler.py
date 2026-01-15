@@ -62,7 +62,7 @@ class PointHandler:
         if setup is not None and setup_amount > 0:
             crop = Crop(x = width, distance = distance, setup_amount = setup_amount)
             for i in range(setup_amount):
-                if self._check_crop(crop,self.setups[setup + (i - 1)] ):
+                if not self._check_crop(crop,self.setups[setup + (i - 1)] ):
                     self.setups[setup + (i - 1)].append(crop)
                     print(f"added crop {crop} to setup {setup + (i - 1)}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
