@@ -106,15 +106,8 @@ class PointHandler:
                             #        amount = int(500 / crop.setup_amount)).to_can_data(),
                             #    id = 0x300 + setup))
                             continue
-
-                        if not any(
-                                abs(c.distance - crop.distance) <= tolerance
-                                and abs(c.x - crop.x) <= tolerance
-                                for c in new_crops
-                        ):
-                            new_crops.append(crop)
                         else:
-                            logger.debug(f"Duplicate crop skipped: {crop}")
+                            new_crops.append(crop)
 
                     self.setups[setup] = new_crops
 
