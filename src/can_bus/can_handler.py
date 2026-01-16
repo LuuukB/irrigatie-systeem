@@ -40,7 +40,7 @@ class CanHandler(ICanHandler):
     async def start(self):
         if not self._listening:
             asyncio.create_task(self._speed_listener())
-            asyncio.create_task(self._send_messages)
+            asyncio.create_task(self._send_messages())
             self._listening = True
 
     def register_callback(self, destination, callback):
@@ -87,7 +87,7 @@ class CanHandler(ICanHandler):
     async def _send_messages(self):
         while True:
             msg = await self.send_queue.get()  # wacht tot er iets is
-
+            logger.debug("got message")
             try:
                 await self.client.request_reply("/can_message", msg)
                 logger.info(f"CAN bericht verstuurd: {msg}")
