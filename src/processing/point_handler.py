@@ -74,7 +74,6 @@ class PointHandler:
 
     #def loop die constand de lijst checkt op waar welk punt is
     async def check_distances(self):
-        tolerance = 50
         self.old_time = time.monotonic()
         self.old_speed = 0.2
         while True:
@@ -144,7 +143,7 @@ class PointHandler:
         if amount_of_setups == 1:
             return distance
         else:
-            return distance + 30 #extra afstand bij turnen
+            return distance - 30 #extra afstand bij turnen
 
     def _check_crop(self, new_crop: Crop, setup, tolerance=50):
         for crop in setup:

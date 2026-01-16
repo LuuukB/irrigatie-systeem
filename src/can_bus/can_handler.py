@@ -39,8 +39,6 @@ class CanHandler(ICanHandler):
     async def start(self):
         if not self._listening:
             asyncio.create_task(self._speed_listener())
-            #asyncio.create_task(self._listen("/twist"))
-            #asyncio.create_task(self._listen("/can_message"))
             self._listening = True
 
     def register_callback(self, destination, callback):
@@ -73,12 +71,9 @@ class CanHandler(ICanHandler):
 
     async def get_speed(self):
         while True:
-            try:
-                with self.lock:
-                    if self.speed is not None:
-                        return self.speed
-            except Exception as e:
-                print(f"errror {e}")
+            with self.lock:
+                if self.speed is not None:
+                    return self.speed
             await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
