@@ -27,6 +27,7 @@ class CanHandler(ICanHandler):
         self.max_angular_rate = 0.1
         self.speed = 0
         self.lock = Lock()
+        self.send_queue = asyncio.Queue()
         print("create canbus")
 
         for cfg in config.configs:
@@ -39,6 +40,7 @@ class CanHandler(ICanHandler):
     async def start(self):
         if not self._listening:
             asyncio.create_task(self._speed_listener())
+            asyncio.create_task(self._send_messages)
             self._listening = True
 
     def register_callback(self, destination, callback):
@@ -77,15 +79,22 @@ class CanHandler(ICanHandler):
             await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
-        print(f"{message}")
 
-        logger.info(f"send {message}")
-        try:
-            await self.client.request_reply("/can_message", message)
-        except Exception as e:
-            print(f"Exception occurred: {e}")
-        print("done")
+        logger.info(f"send Queue {message}")
+        await self.send_queue.put(message)
 
+
+    async def _send_messages(self):
+        while True:
+            msg = await self.send_queue.get()  # wacht tot er iets is
+
+            try:
+                await self.client.request_reply("/can_message", msg)
+                logger.info(f"CAN bericht verstuurd: {msg}")
+            except can.CanError as e:
+                logger.info(f"Fout bij verzenden CAN bericht: {e}")
+            finally:
+                self.send_queue.task_done()
 
     async def _listen(self, destination):
         req = SubscribeRequest(uri=Uri(path=destination), every_n=1)
