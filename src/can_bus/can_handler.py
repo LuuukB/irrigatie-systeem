@@ -91,7 +91,7 @@ class CanHandler(ICanHandler):
             try:
                 await self.client.request_reply("/can_message", msg)
                 logger.info(f"CAN bericht verstuurd: {msg}")
-            except can.CanError as e:
+            except Exception as e:
                 logger.info(f"Fout bij verzenden CAN bericht: {e}")
             finally:
                 self.send_queue.task_done()
