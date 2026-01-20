@@ -96,6 +96,7 @@ class PointHandler:
                         # if distance < 2 (staat niet vast is idee) sent give water message (amount depends on how many setups)
                         if crop.distance <= 20:
                             #send give water message
+                            logger.debug(f"{crop.x}")
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command=1,
