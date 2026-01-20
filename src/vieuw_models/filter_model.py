@@ -7,6 +7,7 @@ from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 
 from setup.setup import Setup
+from processing.cv2_processor import Cv2Processor
 from processing.image_processor import ImageProcessor
 from processing.image_filter import ImageFilter
 
@@ -19,6 +20,7 @@ class FilterModel(EventDispatcher):
 
     def __init__(self):
         self.setup = Setup()
+        self.processor = Cv2Processor()
         self.img_filter = self.setup.filter
         self.camera_task : asyncio.Task = None
         self.lower_hue = self.data.get('lower_hue')
@@ -40,7 +42,11 @@ class FilterModel(EventDispatcher):
         )
 
     def set_filter_property(self, property, value):
+        """changes a property of the filter"""
         setattr(self, property, value)
+
+    def change_area(self, text):
+        pass
 
     async def start_cameras(self):
         camera = await self.setup.get_camera("oak2")

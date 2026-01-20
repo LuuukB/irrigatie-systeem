@@ -21,18 +21,18 @@ class OfflineCameraHandler(ICameraHandler):
     async def start(self):
         self.running = True
         if not self.cap.isOpened():
-            raise ValueError(f"Kan video niet openen: {self.video_path}")
+            raise ValueError(f"can't open video: {self.video_path}")
         threading.Thread(target=self.reader, daemon=True).start()
 
     def reader(self):
         while self.running:
             ret, frame = self.cap.read()
             if not ret:
-                # herstart video
+                # restart video
                 self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 ret, frame = self.cap.read()
                 if not ret:
-                    raise RuntimeError("Kan geen frame meer ophalen uit video")
+                    raise RuntimeError("can't load frame")
             with self.lock:
                 self.latest_frame = frame
             time.sleep(0.3)

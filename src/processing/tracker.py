@@ -8,6 +8,10 @@ class Tracker:
         self.next_id = 0
         self.MAX_DIST = 150
 
+    """
+    checks if crop matches one of the crops already being
+    checkt if so update else new crop
+    """
     def track_contours(self, contours):
         new_tracked = []
 

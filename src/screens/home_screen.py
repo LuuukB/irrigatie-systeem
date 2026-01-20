@@ -40,17 +40,18 @@ class HomeScreen(Screen):
         self.vm.stop_cameras()
 
     def start_stop(self):
+        """checks if algorithm should start or stop and acts accordingly"""
         self.start_task = not self.start_task
         print(self.start_task)
         if self.start_task:
-            print("start")
+            #if start, start thread and let model know to start
             self.vm.stop_thread = False
             self.thread = threading.Thread(target=lambda: asyncio.run(self.vm.start()), daemon=True)
             self.thread.start()
 
             self.ids.start_stop_btn.text = "stop"
         else:
-            print("stop")
+            #if stop, stop thread and tell model to stop
             self.vm.stop_thread = True
             self.ids.start_stop_btn.text = "start"
 

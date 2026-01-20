@@ -53,10 +53,14 @@ class FilterScreen(Screen):
             self.ids.oak1.texture = value
 
     def on_slider_change(self, slider):
+        """updates slider value, and tells model to update filter"""
         property = slider.slider_id
         value = round(slider.value)
         setattr(self, property, value)
         self.vm.set_filter_property(property, value)
+
+    def on_text_input_change(self, text):
+        self.vm.change_area(int(text))
 
     def stop(self):
         if self.camera_task is not None:

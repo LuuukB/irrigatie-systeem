@@ -24,6 +24,7 @@ class ImageFilter:
         self.upper_val = upper_val
 
     def update_json(self):
+        """changes the values stored in the json file"""
         data = {
             "lower_hue": self.lower_hue,
             "upper_hue": self.upper_hue,

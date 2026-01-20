@@ -9,12 +9,8 @@ BoxLayout:
 
         Button:
             id: back_btn_layout
-            background_normal: "assets/back_button.png"
             on_release: app.on_exit_btn()
-            Image:
-                source: "assets/back_button_normal.png" if self.parent.state == "normal" else "assets/back_button_down.png"
-                size: self.parent.size
-                pos: self.parent.pos
+            text: "exit"
 
         Button:
             text: "Home"

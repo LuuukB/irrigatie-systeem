@@ -12,10 +12,11 @@ class Cv2Processor:
         self.tracker = Tracker()
         self.point_handler = point_handler
 
-    def get_contours(self, frame, camera_number, img_filter: ImageFilter = None, ):
+    def onnodig(self, frame, camera_number, img_filter: ImageFilter = None, ):
         #logger.debug("get contours")
         img = frame.copy()
 
+        big_contours = get_contours(frame, img_filter)
         if img_filter:
             frame = img_filter.apply_filter(frame)
         #logger.debug("aplied filter")
@@ -64,3 +65,35 @@ class Cv2Processor:
         #cv2.imshow("output", img)
         #cv2.imshow("frame", frame)
         #cv2.waitKey(1)
+
+    def get_contours(self, frame, img_filter: ImageFilter = None):
+        """takes the given image and returens a list of spotted contours"""
+        if img_filter:
+            frame = img_filter.apply_filter(frame)
+        # logger.debug("aplied filter")
+        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        ret, binary = cv2.threshold(frame_gray, 1, 150, cv2.THRESH_BINARY)
+
+        kernel = np.ones((15, 15), np.uint8)
+
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+        binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
+
+        contours, hierarchy = cv2.findContours(
+            binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        )
+
+        correct_contours = []
+        for c in contours:
+            if cv2.contourArea(c) > 10000:
+                correct_contours.append(c)
+        return correct_contours
+
+
+
+    def draw_contours(self, contours, frame):
+        """draw's given contours over the given frame """
+        cv2.drawContours(image=frame, contours=contours, contourIdx=-1, color=(0, 255, 0), thickness=2,
+                lineType=cv2.LINE_AA)
+        return frame

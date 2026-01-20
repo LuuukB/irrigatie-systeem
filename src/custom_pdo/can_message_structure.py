@@ -25,7 +25,7 @@ class SetupPdo(Packet):
         for easy access to the data
         """
         if len(payload) != 3:
-            raise ValueError(f"Payload lengte ongeldig voor SetupPdo: {len(payload)} bytes")
+            raise ValueError(f"Payload length does not mach SetupPdo: {len(payload)} bytes")
         command, amount = struct.unpack("<BH", payload)
         return cls(command=command, amount=amount)
 
@@ -50,7 +50,7 @@ class GenericPdo(Packet):
         for easy access to the data
         """
         if len(payload) != 2:
-            raise ValueError(f"Payload lengte ongeldig voor SetupPdo: {len(payload)} bytes")
+            raise ValueError(f"Payload length does not mach SetupPdo: {len(payload)} bytes")
         command, = struct.unpack("<H", payload)
         return cls(command=command)
 

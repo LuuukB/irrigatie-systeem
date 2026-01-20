@@ -7,14 +7,10 @@ from threading import Lock
 from can_bus.i_can_handler import ICanHandler
 from farm_ng.core.event_client import EventClient
 from farm_ng.core.event_service_pb2 import SubscribeRequest
-from farm_ng.core.event_service_pb2 import EventServiceConfig
 from farm_ng.core.event_service_pb2 import EventServiceConfigList
 from farm_ng.canbus.canbus_pb2 import RawCanbusMessage
 from farm_ng.core.events_file_reader import payload_to_protobuf
-from farm_ng.canbus.packet import AmigaControlState
-from farm_ng.canbus.packet import AmigaRpdo1
 from farm_ng.canbus.packet import AmigaTpdo1
-
 from farm_ng.core.uri_pb2 import Uri
 from farm_ng.canbus.canbus_pb2 import Twist2d
 from farm_ng.core.events_file_reader import proto_from_json_file
@@ -43,21 +39,6 @@ class CanHandler(ICanHandler):
             asyncio.create_task(self._send_messages())
             self._listening = True
 
-    def register_callback(self, destination, callback):
-        if destination not in self.callbacks:
-            self.callbacks[destination] = []
-        self.callbacks[destination].append(callback)
-
-    async def send_twist(self, message : Twist2d):
-
-        await self.client.request_reply("/twist", message)
-
-    async def set_speed(self, linear_velocity_x, angular_velocity):
-        twist = Twist2d()
-        twist.linear_velocity_x = self.max_speed * linear_velocity_x
-        twist.angular_velocity = self.max_angular_rate * angular_velocity
-        await self.send_twist(twist)
-
     async def _speed_listener(self):
         logger.debug("start looking for speed")
         async for event, payload in self.client.subscribe(
@@ -85,21 +66,14 @@ class CanHandler(ICanHandler):
 
 
     async def _send_messages(self):
+        """waits for a message to be put in the que to send this message"""
         while True:
             msg = await self.send_queue.get()  # wacht tot er iets is
             logger.debug("got message")
             try:
                 await self.client.request_reply("/can_message", msg)
-                logger.info(f"CAN bericht verstuurd: {msg}")
+                logger.info(f"CAN message send: {msg}")
             except Exception as e:
-                logger.info(f"Fout bij verzenden CAN bericht: {e}")
+                logger.info(f"error with sending CAN message: {e}")
             finally:
                 self.send_queue.task_done()
-
-    async def _listen(self, destination):
-        req = SubscribeRequest(uri=Uri(path=destination), every_n=1)
-        async for event, payload in self.client.subscribe(req, decode=True):
-            msg = payload_to_protobuf(event, payload)
-            if destination in self.callbacks:
-                for cb in self.callbacks[destination]:
-                    cb(msg)

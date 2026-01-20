@@ -38,6 +38,7 @@ class PointHandler:
         setup = None
         setup_amount = 0
 
+        """adds pixels to the camera compared to where it is under the robot."""
         logger.debug(f"Camera {camera_number} has x {x}")
         if camera_number > 0:
             width = x + (self.screen_width * camera_number - self.overlap_px * camera_number)
@@ -47,7 +48,7 @@ class PointHandler:
         step = self.total_amount_of_pixels // self.amount_of_stroken
         logger.info(f"{step} {width}")
 
-        #check in witch setup_list point should go
+        """check in witch setup_list point should go"""
         for i in range(self.amount_of_stroken):
             if ((i-1)*step) < width < (i * step):
                 print("jahoor setup gevonden")
@@ -58,7 +59,7 @@ class PointHandler:
         distance = self.get_distance(y, setup_amount)
 
         # stamp with amount of setup_lists
-        # add to correct setup
+        """"check in witch setup_list point should go and if its not already there"""
         if setup is not None and setup_amount > 0:
             crop = Crop(x = width, distance = distance, setup_amount = setup_amount)
             for i in range(setup_amount):
@@ -72,15 +73,14 @@ class PointHandler:
             print("out of scope")
             print(setup, setup_amount, x)
 
-    #def loop die constand de lijst checkt op waar welk punt is
     async def check_distances(self):
+        """A loop that constantly checks the list to see where each point is."""
         self.old_time = time.monotonic()
         self.old_speed = 0.2
         while True:
 
             if any(crops for crops in self.setups.values()):
                 #check_distance
-                #logger.debug(f"found crops")
                 distance_traveled = await self.calculate_distance_traveled()
                 #loops trough every point in the list and substracts traveld distance from there own distance
                 for setup, crops in self.setups.items():
@@ -89,9 +89,8 @@ class PointHandler:
                     for crop in crops:
                         crop.distance -= distance_traveled
                         logger.debug(f"{crop.distance}")
-                        # if distance < 2 (staat niet vast is idee) sent give water message (amount depends on how many setups)
+                        #check if crop is far enough to give water
                         if crop.distance <= 20:
-                            #send give water message
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command=2,
@@ -118,7 +117,7 @@ class PointHandler:
             # wait...
             await asyncio.sleep(0.1)
 
-    #def hulp methode die met gegeven snelheid en huidige punt nieuwe x coordinaat berekend
+    """method that calculates the distance traveled since last update"""
     async def calculate_distance_traveled(self):
         #gets the current time
         #calculates past distance in given stime stack
@@ -133,18 +132,19 @@ class PointHandler:
 
         return distance_traveled
 
-    # initial method to set distance for point to where water needs to be given
+    """initial method to set distance for point to where water needs to be given"""
     def get_distance(self, y, amount_of_setups):
         #gets the y coordinate and calculates the distance to the end point
-        distance = (1920 - y) * 0.40 #pixel naar milimeter conversion
-        #+ afstand van onderkant camera tot daadwerkelijke punt van watergeven
+        distance = (1920 - y) * 0.40 #pixel to milimeter conversion
+        #+ distance of camera tot the point were the water needs to be given
         distance += 800
         #changes end point to amount_of _setups because turning changes the distance
         if amount_of_setups == 1:
             return distance
         else:
-            return distance - 30 #extra afstand bij turnen
+            return distance - 30 # less distance since giving water to multiple plants is closer
 
+    """check if crop already exists"""
     def _check_crop(self, new_crop: Crop, setup, tolerance=50):
         for crop in setup:
             if (

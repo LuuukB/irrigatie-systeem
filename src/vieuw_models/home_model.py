@@ -8,6 +8,7 @@ from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 
 from processing.image_processor import ImageProcessor
+from processing.tracker import Tracker
 from processing.cv2_processor import Cv2Processor
 from custom_pdo.can_message_structure import SetupPdo
 from can_bus.i_can_handler import ICanHandler
@@ -25,6 +26,8 @@ class HomeModel(EventDispatcher):
         self.point_handler = PointHandler()
         self.oak2_processor = Cv2Processor(self.point_handler)
         self.oak3_processor = Cv2Processor(self.point_handler)
+        self.oak2_tracker = Tracker()
+        self.oak3_tracker = Tracker()
         self.image_filter = self.setup.filter
         self.can_bus = self.setup.can_bus
         asyncio.create_task(self.can_bus.start())
@@ -49,10 +52,6 @@ class HomeModel(EventDispatcher):
             setattr(self, f"{property_name}_texture", texture)
             await asyncio.sleep(0.01)
 
-    def send_message(self):
-        msg = SetupPdo(command=1, amount=200)
-        self.can_bus.send_packet(packet = msg, cob_id = 0x301)
-
     def stop_cameras(self):
         for task in self.tasks:
             task.cancel()
@@ -62,10 +61,36 @@ class HomeModel(EventDispatcher):
 
         logger.info("start looking for crops")
         while True and not self.stop_thread:
-            oak2_frame = await self.oak2.get_frame()
-            oak3_frame = await self.oak3.get_frame()
 
-            self.oak2_processor.get_contours(oak2_frame, 0, self.image_filter)
-            self.oak3_processor.get_contours(oak3_frame, 1, self.image_filter)
+            await self.naam(self.oak2, 0, self.oak2_processor, self.oak2_tracker)
+            await self.naam(self.oak3, 1, self.oak3_processor, self.oak3_tracker)
 
             await asyncio.sleep(0.1)
+
+    async def naam(self, camera, camera_number, processor, tracker):
+        """checks camera for contours and acts accordingly"""
+        tracker = tracker
+        frame = await camera.get_frame()
+
+        contours = processor.get_contours(frame, self.image_filter)
+
+        centroids = []
+        for c in contours:
+            M = cv2.moments(c)
+            if M["m00"] != 0:
+                cx = int(M["m10"] / M["m00"])
+                cy = int(M["m01"] / M["m00"])
+                centroids.append((c, cx, cy))
+
+        #adds contours to be tracked and checks for enough validations to know contour is a crop
+        #than adds it to be handled by point handler
+        if len(centroids) > 0:
+            try:
+                draw_midpoints = tracker.track_contours(centroids)
+                for iterations, c, cx, cy in draw_midpoints:
+                    if iterations < 10:
+                        cv2.circle(frame, (cx, cy), 4, (0, 0, 255), -1)
+                    elif iterations == 10:
+                        self.point_handler.handle_point(cx, cy, camera_number)
+            except Exception as e:
+                print(e)
