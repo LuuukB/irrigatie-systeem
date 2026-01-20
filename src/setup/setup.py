@@ -30,11 +30,11 @@ class Setup:
         self.can_bus : ICanHandler = None
 
     def initialize_canbus(self):
-        """checks if application is online or offline and creates a Canbus accordingly"""
+        # hier moet canbus setup komen
         try:
-            self.can_bus = self.can_bus_factory.create_offline()
+            self.can_bus = self.can_bus_factory.create_online()
             print("create online canbus")
-            self.robot_online = False
+            self.robot_online = True
         except Exception as e:
             print(e)
             self.can_bus = self.can_bus_factory.create_offline()
@@ -42,7 +42,6 @@ class Setup:
             self.robot_online = False
 
     async def get_camera(self, name: str):
-        """checks if camera exists if not create one else return the one that exists"""
         if name not in self._cameras:
             if self.robot_online:
                 cam = self.camera_factory.add_camera_online(name)
