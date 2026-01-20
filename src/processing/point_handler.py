@@ -68,6 +68,7 @@ class PointHandler:
                 if not self._check_crop(crop, self.setups[setup + (i - 1)]):
                     point = width - self.quarter_of_Screen * (setup + (i - 2))
                     crop.x = point / self.quarter_of_Screen * 150
+                    logger.debug(f"{crop.x}")
                     self.setups[setup + (i - 1)].append(crop)
                     print(f"added crop {crop} to setup {setup + (i - 1)} with x {x}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
