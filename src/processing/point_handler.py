@@ -21,7 +21,7 @@ class PointHandler:
     amount_of_stroken = 7
     amount_of_setups = 4
     screen_width = 1920
-    quarter_of_Screen = screen_width // amount_of_cameras
+    quarter_of_Screen = screen_width / amount_of_setups
     pixels_per_cm = 1920 / 86
     camera_px = 86 * 22.33
     overlap_px = 30 * 22.33
