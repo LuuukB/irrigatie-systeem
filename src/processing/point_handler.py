@@ -141,9 +141,9 @@ class PointHandler:
     # initial method to set distance for point to where water needs to be given
     def get_distance(self, y, amount_of_setups):
         #gets the y coordinate and calculates the distance to the end point
-        distance = (1920 - y) * 0.40 #pixel naar milimeter conversion
+        distance = (1080 - y) * 0.40 #pixel naar milimeter conversion
         #+ afstand van onderkant camera tot daadwerkelijke punt van watergeven
-        distance += 800
+        distance += 1000
         #changes end point to amount_of _setups because turning changes the distance
         if amount_of_setups == 1:
             return distance
