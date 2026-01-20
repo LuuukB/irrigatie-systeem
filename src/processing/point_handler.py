@@ -144,7 +144,7 @@ class PointHandler:
         #gets the y coordinate and calculates the distance to the end point
         distance = (1080 - y) * 0.40 #pixel naar milimeter conversion
         #+ afstand van onderkant camera tot daadwerkelijke punt van watergeven
-        distance += 800
+        distance += 750
         #changes end point to amount_of _setups because turning changes the distance
         if amount_of_setups == 1:
             return distance
