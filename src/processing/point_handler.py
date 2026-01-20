@@ -21,12 +21,13 @@ class PointHandler:
     amount_of_stroken = 7
     amount_of_setups = 4
     screen_width = 1920
-    quarter_of_Screen = screen_width / amount_of_setups
     pixels_per_cm = 1920 / 86
     camera_px = 86 * 22.33
     overlap_px = 30 * 22.33
     total_amount_of_pixels = (amount_of_cameras * camera_px) - (
             (amount_of_cameras - 1) * overlap_px)
+    quarter_of_Screen = total_amount_of_pixels // amount_of_setups
+
 
     def __init__(self):
         self.setups = {1:[], 2:[], 3:[], 4:[]}
