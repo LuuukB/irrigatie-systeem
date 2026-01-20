@@ -7,6 +7,7 @@ from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 
 from setup.setup import Setup
+from file_communication.json_handler import JsonHandler
 from processing.cv2_processor import Cv2Processor
 from processing.image_processor import ImageProcessor
 from processing.image_filter import ImageFilter
@@ -15,20 +16,21 @@ from processing.image_filter import ImageFilter
 class FilterModel(EventDispatcher):
     frame_texture = ObjectProperty(None)
     filter_texture = ObjectProperty(None)
-    with open("filter_values.json") as json_file:
-        data = json.load(json_file)
 
     def __init__(self):
         self.setup = Setup()
         self.processor = Cv2Processor()
         self.img_filter = self.setup.filter
+        self.json_handler = JsonHandler()
         self.camera_task : asyncio.Task = None
-        self.lower_hue = self.data.get('lower_hue')
-        self.upper_hue = self.data.get('upper_hue')
-        self.lower_sat = self.data.get('lower_sat')
-        self.upper_sat = self.data.get('upper_sat')
-        self.lower_val = self.data.get('lower_val')
-        self.upper_val = self.data.get('upper_val')
+        (
+            self.upper_hue,
+            self.lower_hue,
+            self.upper_sat,
+            self.lower_sat,
+            self.upper_val,
+            self.lower_val
+        ) = self.json_handler.get_filter_values()
 
     def update_filter(self):
 
@@ -46,7 +48,7 @@ class FilterModel(EventDispatcher):
         setattr(self, property, value)
 
     def change_area(self, text):
-        pass
+        self.json_handler.update_property("detection_radius", text)
 
     async def start_cameras(self):
         camera = await self.setup.get_camera("oak2")

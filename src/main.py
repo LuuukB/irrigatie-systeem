@@ -28,6 +28,7 @@ from kivy.app import App  # noqa: E402
 from kivy.lang.builder import Builder  # noqa: E402
 
 from setup.setup import Setup
+from file_communication.json_handler import JsonHandler
 from screens.home_screen import HomeScreen
 from screens.filter_screen import FilterScreen
 logger = logging.getLogger(__name__)
@@ -40,6 +41,7 @@ class TemplateApp(App):
         super().__init__()
         self.setup = Setup()
         self.setup.initialize_canbus()
+        self.json_handler = JsonHandler()
 
         self.async_tasks: List[asyncio.Task] = []
 
@@ -53,7 +55,7 @@ class TemplateApp(App):
         home_screen = sm.get_screen("home")
         filter_screen = sm.get_screen("filter")
 
-        self.setup.filter.update_json()
+        self.json_handler.update_json()
         home_screen.stop()
         filter_screen.stop()
 

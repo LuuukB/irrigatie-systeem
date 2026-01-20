@@ -7,6 +7,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 from vieuw_models.filter_model import FilterModel
 from kivy.properties import NumericProperty
+from file_communication.json_handler import JsonHandler
 
 from widgets.camera_widget.camera_widget import CameraWidget
 
@@ -16,19 +17,28 @@ with open ("filter_values.json") as json_file:
     data = json.load(json_file)
 
 class FilterScreen(Screen):
-    upper_hue = NumericProperty(data.get("upper_hue"))
-    lower_hue = NumericProperty(data.get("lower_hue"))
-    upper_sat = NumericProperty(data.get("upper_sat"))
-    lower_sat = NumericProperty(data.get("lower_sat"))
-    upper_val = NumericProperty(data.get("upper_val"))
-    lower_val = NumericProperty(data.get("lower_val"))
+    upper_hue = NumericProperty(0)
+    lower_hue = NumericProperty(0)
+    upper_sat = NumericProperty(0)
+    lower_sat = NumericProperty(0)
+    upper_val = NumericProperty(0)
+    lower_val = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.vm = FilterModel()
+        self.json_handler = JsonHandler()
         self.vm.bind(frame_texture = self.update_oak0)
         self.vm.bind(filter_texture = self.update_oak1)
         self.camera_task: asyncio.Task = None
+        (
+            self.upper_hue,
+            self.lower_hue,
+            self.upper_sat,
+            self.lower_sat,
+            self.upper_val,
+            self.lower_val
+        ) = self.json_handler.get_filter_values()
 
     def on_enter(self):
         print("enter")
@@ -59,7 +69,7 @@ class FilterScreen(Screen):
         setattr(self, property, value)
         self.vm.set_filter_property(property, value)
 
-    def on_text_input_change(self, text):
+    def set_detection_radius(self, text):
         self.vm.change_area(int(text))
 
     def stop(self):

@@ -6,11 +6,13 @@ logger = logging.getLogger(__name__)
 from processing.image_filter import ImageFilter
 from processing.tracker import Tracker
 from processing.point_handler import PointHandler
+from file_communication.json_handler import JsonHandler
 
 class Cv2Processor:
     def __init__(self, point_handler=None):
         self.tracker = Tracker()
         self.point_handler = point_handler
+        self.json_handler = JsonHandler()
 
     def onnodig(self, frame, camera_number, img_filter: ImageFilter = None, ):
         #logger.debug("get contours")
@@ -40,7 +42,7 @@ class Cv2Processor:
 
         centroids = []
         for c in contours:
-            if cv2.contourArea(c) > 10000:
+            if cv2.contourArea(c) > self.json_handler.get_detection_radius():
                 M = cv2.moments(c)
                 if M["m00"] != 0:
                     cx = int(M["m10"] / M["m00"])
@@ -86,7 +88,7 @@ class Cv2Processor:
 
         correct_contours = []
         for c in contours:
-            if cv2.contourArea(c) > 10000:
+            if cv2.contourArea(c) > self.json_handler.get_detection_radius():
                 correct_contours.append(c)
         return correct_contours
 
