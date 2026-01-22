@@ -73,9 +73,9 @@ class PointHandler:
                     #logger.debug(point)
                     crop.x = max(0, 150 - (point / self.quarter_of_Screen * 150))
                     logger.debug(f"{crop.x}")
-                    self.setups[setup + (i - 1)].append(crop)
+                    self.setups[setup + i].append(crop)
                     print(f"added crop {crop} to setup {setup + i } with x {x}")
-                    logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
+                    logger.info(f"camera {camera_number} added crop {crop} to setup {setup + i}")
                 else:
                     logger.info(f"skipped crop {crop}")
         else:
