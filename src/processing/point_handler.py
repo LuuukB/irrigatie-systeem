@@ -63,10 +63,12 @@ class PointHandler:
         # stamp with amount of setup_lists
         # add to correct setup
         if setup is not None and setup_amount > 0:
-            crop = Crop(x = width, distance = distance, setup_amount = setup_amount)
             for i in range(setup_amount):
+                crop = Crop(x=width, distance=distance, setup_amount=setup_amount)
                 if not self._check_crop(crop, self.setups[setup + (i - 1)]):
+                    logger.debug(f"{self.quarter_of_Screen}")
                     point = width - self.quarter_of_Screen * (setup + (i - 2))
+                    logger.debug(point)
                     crop.x = point / self.quarter_of_Screen * 150
                     logger.debug(f"{crop.x}")
                     self.setups[setup + (i - 1)].append(crop)
