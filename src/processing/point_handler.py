@@ -69,7 +69,7 @@ class PointHandler:
                     logger.debug(f"{self.quarter_of_Screen}")
                     point = width - self.quarter_of_Screen * (setup + (i - 2))
                     logger.debug(point)
-                    crop.x = point / self.quarter_of_Screen * 150
+                    crop.x = 150 - (point / self.quarter_of_Screen * 150)
                     logger.debug(f"{crop.x}")
                     self.setups[setup + (i - 1)].append(crop)
                     print(f"added crop {crop} to setup {setup + (i - 1)} with x {x}")
