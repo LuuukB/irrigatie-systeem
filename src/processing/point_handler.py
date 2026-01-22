@@ -15,7 +15,6 @@ class Crop:
     setup_amount: int
 
 
-
 class PointHandler:
     amount_of_cameras = 2
     amount_of_stroken = 7
@@ -52,7 +51,7 @@ class PointHandler:
 
         #check in witch setup_list point should go
         for i in range(self.amount_of_stroken):
-            if ((i-1)*step) < width < (i * step):
+            if (i * step) < width < (i+1 * step):
                 #print("jahoor setup gevonden")
                 setup = i // 2 + 1
                 setup_amount = i % 2 + 1
@@ -64,15 +63,16 @@ class PointHandler:
         # add to correct setup
         if setup is not None and setup_amount > 0:
             for i in range(setup_amount):
+                logger.debug(f"i = {i}")
                 crop = Crop(x=width, distance=distance, setup_amount=setup_amount)
-                if not self._check_crop(crop, self.setups[setup + (i - 1)]):
+                if not self._check_crop(crop, self.setups[setup + i ]):
                     #logger.debug(f"{self.quarter_of_Screen}")
-                    point = width - self.quarter_of_Screen * (setup + (i - 2))
+                    point = width - self.quarter_of_Screen * (setup + (i - 1))
                     #logger.debug(point)
                     crop.x = max(0, 150 - (point / self.quarter_of_Screen * 150))
                     logger.debug(f"{crop.x}")
                     self.setups[setup + (i - 1)].append(crop)
-                    print(f"added crop {crop} to setup {setup + (i - 1)} with x {x}")
+                    print(f"added crop {crop} to setup {setup + i } with x {x}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
                 else:
                     logger.info(f"skipped crop {crop}")
@@ -164,5 +164,3 @@ class PointHandler:
             ):
                 return True
         return False
-
-
