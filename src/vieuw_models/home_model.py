@@ -88,6 +88,7 @@ class HomeModel(EventDispatcher):
             try:
                 draw_midpoints = tracker.track_contours(centroids)
                 for iterations, c, cx, cy in draw_midpoints:
+                    logger.debug(f"found crop with {iterations} itterations")
                     if iterations > 5:
                         cv2.circle(frame, (cx, cy), 4, (0, 0, 255), -1)
                     elif iterations == 5:
