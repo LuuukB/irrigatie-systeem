@@ -88,9 +88,9 @@ class HomeModel(EventDispatcher):
             try:
                 draw_midpoints = tracker.track_contours(centroids)
                 for iterations, c, cx, cy in draw_midpoints:
-                    if iterations < 10:
+                    if iterations > 5:
                         cv2.circle(frame, (cx, cy), 4, (0, 0, 255), -1)
-                    elif iterations == 10:
+                    elif iterations == 5:
                         self.point_handler.handle_point(cx, cy, camera_number)
             except Exception as e:
                 print(e)
