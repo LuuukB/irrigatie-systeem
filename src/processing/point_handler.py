@@ -47,12 +47,13 @@ class PointHandler:
         else:
             width = x
         step = self.total_amount_of_pixels // self.amount_of_stroken
-        #logger.info(f"{step} {width}")
+        logger.info(f"{step} {width}")
 
         #check in witch setup_list point should go
         for i in range(self.amount_of_stroken):
             if (i * step) < width < (i+1 * step):
                 #print("jahoor setup gevonden")
+                logger.debug(f"found setup {i} {width}")
                 setup = i // 2 + 1
                 setup_amount = i % 2 + 1
 
