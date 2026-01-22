@@ -48,12 +48,12 @@ class PointHandler:
         else:
             width = x
         step = self.total_amount_of_pixels // self.amount_of_stroken
-        logger.info(f"{step} {width}")
+        #logger.info(f"{step} {width}")
 
         #check in witch setup_list point should go
         for i in range(self.amount_of_stroken):
             if ((i-1)*step) < width < (i * step):
-                print("jahoor setup gevonden")
+                #print("jahoor setup gevonden")
                 setup = i // 2 + 1
                 setup_amount = i % 2 + 1
 
@@ -66,11 +66,11 @@ class PointHandler:
             for i in range(setup_amount):
                 crop = Crop(x=width, distance=distance, setup_amount=setup_amount)
                 if not self._check_crop(crop, self.setups[setup + (i - 1)]):
-                    logger.debug(f"{self.quarter_of_Screen}")
+                    #logger.debug(f"{self.quarter_of_Screen}")
                     point = width - self.quarter_of_Screen * (setup + (i - 2))
-                    logger.debug(point)
+                    #logger.debug(point)
                     crop.x = 150 - (point / self.quarter_of_Screen * 150)
-                    logger.debug(f"{crop.x}")
+                    #logger.debug(f"{crop.x}")
                     self.setups[setup + (i - 1)].append(crop)
                     print(f"added crop {crop} to setup {setup + (i - 1)} with x {x}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + (i - 1)}")
@@ -96,11 +96,11 @@ class PointHandler:
 
                     for crop in crops:
                         crop.distance -= distance_traveled
-                        logger.debug(f"{crop.distance}")
+                        #logger.debug(f"{crop.distance}")
                         # if distance < 2 (staat niet vast is idee) sent give water message (amount depends on how many setups)
                         if crop.distance <= 20:
                             #send give water message
-                            logger.debug(f"{crop.x}")
+                            #logger.debug(f"{crop.x}")
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command=1,
@@ -136,11 +136,11 @@ class PointHandler:
         self.old_time = current_time
         
         current_speed = await self.can_bus.get_speed()
-        logger.debug(f"current speed: {current_speed}")
-        logger.debug(f"forgone time: {forgone_time}")
+        #logger.debug(f"current speed: {current_speed}")
+        #logger.debug(f"forgone time: {forgone_time}")
 
         distance_traveled = current_speed * forgone_time * 1000
-        logger.debug(f"distance_traveled: {distance_traveled}")
+        #logger.debug(f"distance_traveled: {distance_traveled}")
 
         return distance_traveled
 
