@@ -10,7 +10,8 @@ from setup.setup import Setup
 
 @dataclass
 class Crop:
-    x: int
+    location: int
+    width: int
     distance: float
     setup_amount: int
 
@@ -66,13 +67,13 @@ class PointHandler:
         if setup is not None and setup_amount > 0:
             for i in range(setup_amount):
                 logger.debug(f"i = {i}")
-                crop = Crop(x=width, distance=distance, setup_amount=setup_amount)
+                crop = Crop(width=width, distance=distance, setup_amount=setup_amount, location = 0)
                 if not self._check_crop(crop, self.setups[setup + i ]):
                     #logger.debug(f"{self.quarter_of_Screen}")
                     point = width - self.quarter_of_Screen * (setup + (i - 1))
                     #logger.debug(point)
-                    crop.x = max(0, 150 - (point / self.quarter_of_Screen * 150))
-                    logger.debug(f"{crop.x}")
+                    crop.location = max(0, 150 - (point / self.quarter_of_Screen * 150))
+                    logger.debug(f"{crop.location}")
                     self.setups[setup + i].append(crop)
                     print(f"added crop {crop} to setup {setup + i } with x {x}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + i}")
@@ -85,7 +86,7 @@ class PointHandler:
     #def loop die constand de lijst checkt op waar welk punt is
     async def check_distances(self):
         self.old_time = time.monotonic()
-        self.old_speed = 0.2
+        self.old_speed = await self.can_bus.get_speed()
         while True:
 
             if any(crops for crops in self.setups.values()):
@@ -106,7 +107,7 @@ class PointHandler:
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command=1,
-                                    amount=int(crop.x)).to_can_data(),
+                                    amount=int(crop.location)).to_can_data(),
                                 id = 0x300 + setup))
                             logger.debug("done sending")
 
@@ -125,7 +126,7 @@ class PointHandler:
             # else wait and set old_time to new time
             else:
                 self.old_time = time.monotonic()
-                self.old_speed = 0.2
+                self.old_speed = await self.can_bus.get_speed()
             # wait...
             await asyncio.sleep(0.1)
 
@@ -162,7 +163,7 @@ class PointHandler:
         for crop in setup:
             if (
                     abs(crop.distance - new_crop.distance) <= tolerance
-                    and abs(crop.x - new_crop.x) <= tolerance
+                    and abs(crop.width - new_crop.width) <= tolerance
             ):
                 return True
         return False
