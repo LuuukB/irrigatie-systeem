@@ -92,7 +92,7 @@ class PointHandler:
 
             if not self._check_crop(crop, self.setups[setup]):
                 point = width - self.third_of_screen * (setup - 1)
-                point_with_offset = point - nineth_of_screen * (setup - 1)
+                point_with_offset = point - self.nineth_of_screen * (setup - 1)
                 crop.location = max(
                     0, 150 - (point_with_offset / self.third_of_screen * 150)
                 )
