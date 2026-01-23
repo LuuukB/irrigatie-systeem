@@ -55,12 +55,14 @@ class PointHandler:
             logger.debug(f" {i * step} <= {width} < {(i+1) * step}")
             if (i * step) <= width < ((i+1) * step):
                 #print("jahoor setup gevonden")
-                logger.debug(f"found setup {i} {width}")
+                logger.debug(f"found step {i} {width}")
                 for setup_numb in range(1, self.amount_of_setups + 1):
                     start_strip = (setup_numb - 1) * 2
                     end_strip = start_strip + 2
 
+
                     if start_strip <= i <= end_strip:
+                        logger.debug(f"{start_strip} <= {i} <= {end_strip}")
                         setup = setup_numb
                         setup_amount += 1
 
