@@ -38,57 +38,70 @@ class PointHandler:
 
     def handle_point(self, x, y, camera_number):
 
-        setup = None
-        setup_amount = 0
-
         logger.debug(f"Camera {camera_number} has x {x}")
+
+        # --- width berekenen ---
         if camera_number > 0:
-            width = x + (self.screen_width * camera_number - self.overlap_px * camera_number)
+            width = x + (self.screen_width * camera_number -
+                         self.overlap_px * camera_number)
             logger.debug(f"added {width - x} to x {x} coming to width {width}")
         else:
             width = x
+
         step = self.total_amount_of_pixels // self.amount_of_strips
         logger.info(f"{step} {width}")
 
-        #check in witch setup_list point should go
-        for i in range(self.amount_of_strips):
-            logger.debug(f" {i * step} <= {width} < {(i+1) * step}")
-            if (i * step) <= width < ((i+1) * step):
-                #print("jahoor setup gevonden")
-                logger.debug(f"found step {i} {width}")
-                for setup_numb in range(1, self.amount_of_setups + 1):
-                    start_strip = (setup_numb - 1) * 2
+        # --- bepaal strip & setups ---
+        setups_for_strip = []
+
+        for strip in range(self.amount_of_strips):
+            logger.debug(f"{strip * step} <= {width} < {(strip + 1) * step}")
+
+            if (strip * step) <= width < ((strip + 1) * step):
+                logger.debug(f"found strip {strip} for width {width}")
+
+                for setup in range(1, self.amount_of_setups + 1):
+                    start_strip = (setup - 1) * 2
                     end_strip = start_strip + 2
 
+                    if start_strip <= strip <= end_strip:
+                        setups_for_strip.append(setup)
+                        logger.debug(
+                            f"strip {strip} belongs to setup {setup}"
+                        )
 
-                    if start_strip <= i <= end_strip:
-                        logger.debug(f"{start_strip} <= {i} <= {end_strip}")
-                        setup = setup_numb
-                        setup_amount += 1
+                break  # width kan maar in 1 strip zitten
 
-        # stamp with set_distance
-        distance = self.get_distance(y, setup_amount)
+        # --- niets gevonden ---
+        if not setups_for_strip:
+            logger.warning(f"out of scope: width={width}")
+            return
 
-        # stamp with amount of setup_lists
-        # add to correct setup
-        if setup is not None and setup_amount > 0:
-            for i in range(setup_amount):
-                logger.debug(f"i = {i}")
-                crop = Crop(width=width, distance=distance, setup_amount=setup_amount, location = 0)
-                if not self._check_crop(crop, self.setups[setup - i ]):
-                    #logger.debug(f"{self.quarter_of_Screen}")
-                    point = width - self.quarter_of_Screen * (setup - (i - 1))
-                    #logger.debug(point)
-                    crop.location = max(0, 150 - (point / self.quarter_of_Screen * 150))
-                    logger.debug(f"{crop.location}")
-                    self.setups[setup - i].append(crop)
-                    print(f"added crop {crop} to setup {setup - i } with x {x}")
-                    logger.info(f"camera {camera_number} added crop {crop} to setup {setup + i}")
-                else:
-                    logger.info(f"skipped crop {crop}")
-        else:
-            print("out of scope")
-            print(setup, setup_amount, x)
+        # --- afstand bepalen ---
+        distance = self.get_distance(y, len(setups_for_strip))
+
+        # --- toevoegen aan setups ---
+        for setup in setups_for_strip:
+            crop = Crop(
+                width=width,
+                distance=distance,
+                setup_amount=len(setups_for_strip),
+                location=0
+            )
+
+            if not self._check_crop(crop, self.setups[setup]):
+                point = width - self.quarter_of_Screen * (setup - 1)
+                crop.location = max(
+                    0, 150 - (point / self.quarter_of_Screen * 150)
+                )
+
+                self.setups[setup].append(crop)
+
+                logger.info(
+                    f"camera {camera_number} added crop {crop} to setup {setup}"
+                )
+            else:
+                logger.info(f"skipped crop {crop}")
 
     #def loop die constand de lijst checkt op waar welk punt is
     async def check_distances(self):
