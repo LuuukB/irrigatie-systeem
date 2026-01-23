@@ -26,7 +26,8 @@ class PointHandler:
     overlap_px = 30 * 22.33
     total_amount_of_pixels = (amount_of_cameras * camera_px) - (
             (amount_of_cameras - 1) * overlap_px)
-    quarter_of_Screen = total_amount_of_pixels // amount_of_setups
+    third_of_screen = total_amount_of_pixels // amount_of_setups
+    nineth_of_screen = total_amount_of_pixels // amount_of_strips
 
 
     def __init__(self):
@@ -90,9 +91,10 @@ class PointHandler:
             )
 
             if not self._check_crop(crop, self.setups[setup]):
-                point = width - self.quarter_of_Screen * (setup - 1)
+                point = width - self.third_of_screen * (setup - 1)
+                point_with_offset = point - nineth_of_screen * (setup - 1)
                 crop.location = max(
-                    0, 150 - (point / self.quarter_of_Screen * 150)
+                    0, 150 - (point_with_offset / self.third_of_screen * 150)
                 )
 
                 self.setups[setup].append(crop)
