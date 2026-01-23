@@ -98,7 +98,7 @@ class PointHandler:
                 point_with_offset = point + self.nineth_of_screen * (setup - 1)
                 logger.debug(f"point with offset: {point_with_offset}")
                 crop.location = max(
-                    0, 150 - (point_with_offset / self.third_of_screen * 110)
+                    0, 110 - (point_with_offset / self.third_of_screen * 110)
                 )
 
                 self.setups[setup].append(crop)
