@@ -26,7 +26,7 @@ class PointHandler:
     overlap_px = 30 * 22.33
     total_amount_of_pixels = (amount_of_cameras * camera_px) - (
             (amount_of_cameras - 1) * overlap_px)
-    third_of_screen = total_amount_of_pixels // amount_of_setups
+    third_of_screen = total_amount_of_pixels // 3
     nineth_of_screen = total_amount_of_pixels // amount_of_strips
 
 
