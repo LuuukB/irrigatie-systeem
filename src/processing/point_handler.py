@@ -18,7 +18,7 @@ class Crop:
 
 class PointHandler:
     amount_of_cameras = 2
-    amount_of_stroken = 7
+    amount_of_strips = 9
     amount_of_setups = 4
     screen_width = 1920
     pixels_per_cm = 1920 / 86
@@ -47,17 +47,22 @@ class PointHandler:
             logger.debug(f"added {width - x} to x {x} coming to width {width}")
         else:
             width = x
-        step = self.total_amount_of_pixels // self.amount_of_stroken
+        step = self.total_amount_of_pixels // self.amount_of_strips
         logger.info(f"{step} {width}")
 
         #check in witch setup_list point should go
-        for i in range(self.amount_of_stroken):
+        for i in range(self.amount_of_strips):
             logger.debug(f" {i * step} <= {width} < {(i+1) * step}")
             if (i * step) <= width < ((i+1) * step):
                 #print("jahoor setup gevonden")
                 logger.debug(f"found setup {i} {width}")
-                setup = i // 2 + 1
-                setup_amount = i % 2 + 1
+                for setup_numb in range(1, self.amount_of_setups + 1):
+                    start_strip = (setup_numb - 1) * 2
+                    end_strip = start_strip + 2
+
+                    if start_strip <= i <= end_strip:
+                        setup = setup_numb
+                        setup_amount += 1
 
         # stamp with set_distance
         distance = self.get_distance(y, setup_amount)
@@ -68,14 +73,14 @@ class PointHandler:
             for i in range(setup_amount):
                 logger.debug(f"i = {i}")
                 crop = Crop(width=width, distance=distance, setup_amount=setup_amount, location = 0)
-                if not self._check_crop(crop, self.setups[setup + i ]):
+                if not self._check_crop(crop, self.setups[setup - i ]):
                     #logger.debug(f"{self.quarter_of_Screen}")
-                    point = width - self.quarter_of_Screen * (setup + (i - 1))
+                    point = width - self.quarter_of_Screen * (setup - (i - 1))
                     #logger.debug(point)
                     crop.location = max(0, 150 - (point / self.quarter_of_Screen * 150))
                     logger.debug(f"{crop.location}")
-                    self.setups[setup + i].append(crop)
-                    print(f"added crop {crop} to setup {setup + i } with x {x}")
+                    self.setups[setup - i].append(crop)
+                    print(f"added crop {crop} to setup {setup - i } with x {x}")
                     logger.info(f"camera {camera_number} added crop {crop} to setup {setup + i}")
                 else:
                     logger.info(f"skipped crop {crop}")
