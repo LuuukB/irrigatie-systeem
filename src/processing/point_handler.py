@@ -91,12 +91,12 @@ class PointHandler:
             )
 
             if not self._check_crop(crop, self.setups[setup]):
-                logger.debug(self.third_of_screen)
-                logger.debug(self.nineth_of_screen)
+                logger.debug(f"thirtd of the screen: {self.third_of_screen}")
+                logger.debug(f"nineth of the screen: {self.nineth_of_screen}")
                 point = width - self.third_of_screen * (setup - 1)
-                logger.debug(point)
+                logger.debug(f"point: {point}")
                 point_with_offset = point - self.nineth_of_screen * (setup - 1)
-                logger.debug(point_with_offset)
+                logger.debug(f"point with offset: {point_with_offset}")
                 crop.location = max(
                     0, 150 - (point_with_offset / self.third_of_screen * 150)
                 )
