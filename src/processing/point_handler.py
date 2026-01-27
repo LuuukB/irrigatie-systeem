@@ -73,7 +73,7 @@ class PointHandler:
                             f"strip {strip} belongs to setup {setup}"
                         )
 
-                break  # width kan maar in 1 strip zitten
+                break
 
         # --- niets gevonden ---
         if not setups_for_strip:
