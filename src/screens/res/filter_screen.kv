@@ -80,5 +80,11 @@
             TextInput:
                 multiline: False
                 input_filter: 'int'
-                hint_text: '10000'
+                hint_text: 'minimal detection area'
                 on_text_validate: root.set_detection_radius(self.text)
+
+            TextInput:
+                multiline: False
+                input_filter: 'int'
+                hint_text: 'amount of water to give'
+                on_text_validate: root.set_amount_of_water(self.text)

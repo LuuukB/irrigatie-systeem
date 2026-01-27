@@ -72,6 +72,9 @@ class FilterScreen(Screen):
     def set_detection_radius(self, text):
         self.vm.change_area(int(text))
 
+    def set_amount_of_water(self, text):
+        self.vm.set_water(int(text))
+
     def stop(self):
         if self.camera_task is not None:
             self.camera_task.cancel()

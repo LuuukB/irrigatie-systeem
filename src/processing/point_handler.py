@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 from dataclasses import dataclass
 from farm_ng.canbus.canbus_pb2 import RawCanbusMessage
 from custom_pdo.can_message_structure import SetupPdo
+from file_communication.json_handler import JsonHandler
 from setup.setup import Setup
 
 @dataclass
@@ -35,6 +36,7 @@ class PointHandler:
         self.old_time = 0
         self.old_speed = 0
         self.setup = Setup()
+        self.json_handler = JsonHandler()
         self.can_bus = self.setup.can_bus
 
     def handle_point(self, x, y, camera_number):
@@ -140,7 +142,7 @@ class PointHandler:
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command = 0,
-                                    amount = int(200 / crop.setup_amount)).to_can_data(),
+                                    amount = int(self.json_handler.water_amount / crop.setup_amount)).to_can_data(),
                                 id = 0x300 + setup))
                             continue
                         else:

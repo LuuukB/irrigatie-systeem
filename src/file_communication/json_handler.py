@@ -27,6 +27,7 @@ class JsonHandler:
         self.upper_val = data.get("upper_val")
         self.lower_val = data.get("lower_val")
         self.detection_radius = data.get("detection_radius")
+        self.water_amount = data.get("water_amount")
 
 
     def update_json(self):
@@ -38,10 +39,15 @@ class JsonHandler:
             "lower_val": self.lower_val,
             "upper_val": self.upper_val,
             "detection_radius": self.detection_radius,
+            "water_amount": self.water_amount,
         }
-        json_str = json.dumps(data)
+
         with open("filter_values.json", "w") as json_file:
-            json_file.write(json_str)
+            json.dump(
+                data,
+                json_file,
+                indent = 4
+            )
 
     def get_filter_values(self):
         """returns in this order, upperHue, lowerHue, upperSat, lowerSat, upperVal, lowerVal"""
@@ -49,6 +55,9 @@ class JsonHandler:
 
     def get_detection_radius(self):
         return self.detection_radius
+
+    def get_water_amount(self):
+        return self.water_amount
 
     def update_property(self, property, value):
         setattr(self, property, value)

@@ -50,6 +50,9 @@ class FilterModel(EventDispatcher):
     def change_area(self, text):
         self.json_handler.update_property("detection_radius", text)
 
+    def set_water(self, text):
+        self.json_handler.update_property("water_amount", text)
+
     async def start_cameras(self):
         camera = await self.setup.get_camera("oak2")
         print("start cameras")
