@@ -16,6 +16,9 @@ class JsonHandler:
             logger.info("already has JsonHandler")
             return
 
+        """
+        open json once to get alle the info from last session
+        """
         with open("filter_values.json") as json_file:
             data = json.load(json_file)
 
@@ -31,6 +34,9 @@ class JsonHandler:
 
 
     def update_json(self):
+        """
+        takes al the current value's and replaces the old ones in the json file
+        """
         data = {
             "lower_hue": self.lower_hue,
             "upper_hue": self.upper_hue,
@@ -50,7 +56,10 @@ class JsonHandler:
             )
 
     def get_filter_values(self):
-        """returns in this order, upperHue, lowerHue, upperSat, lowerSat, upperVal, lowerVal"""
+        """
+        returns in this order:
+        upperHue, lowerHue, upperSat, lowerSat, upperVal, lowerVal
+        """
         return self.upper_hue, self.lower_hue, self.upper_sat, self.lower_sat, self.upper_val, self.lower_val
 
     def get_detection_radius(self):
@@ -60,9 +69,18 @@ class JsonHandler:
         return self.water_amount
 
     def update_property(self, property, value):
+        """
+        update any given property
+        - property: property to update
+        - value: value to update property with
+        """
         setattr(self, property, value)
 
     def update_filter(self, filter):
+        """
+        updates all the filter values
+        - filter: ImageFilter witch values will update the values of this class
+        """
         self.upper_hue = filter.upper_hue
         self.lower_hue = filter.lower_hue
         self.upper_sat = filter.upper_sat

@@ -8,11 +8,12 @@ class Tracker:
         self.next_id = 0
         self.MAX_DIST = 150
 
-    """
-    checks if crop matches one of the crops already being
-    checkt if so update else new crop
-    """
+
     def track_contours(self, contours):
+        """
+        checks if crop matches one of the crops already being tracked
+        if so update, else new crop
+        """
         new_tracked = []
 
         for c, cx, cy in contours:
@@ -32,5 +33,7 @@ class Tracker:
 
     @staticmethod
     def difference(p1, p2):
-        #euclidean distance wikipedia
+        """
+        returns the difference between two points
+        """
         return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])

@@ -30,18 +30,28 @@ class Setup:
         self.can_bus : ICanHandler = None
 
     def initialize_canbus(self):
-        # hier moet canbus setup komen
+        """
+        checks if Canbus can be created if not create mock Canbus
+        - does not work, but if u don't push the offline version
+         u can work offline and keep the robot on online
+        """
         try:
             self.can_bus = self.can_bus_factory.create_online()
-            print("create online canbus")
+
             self.robot_online = True
         except Exception as e:
             print(e)
             self.can_bus = self.can_bus_factory.create_offline()
-            print("create offline canbus")
+
             self.robot_online = False
 
     async def get_camera(self, name: str):
+        """
+        checks if this camera exists,
+        if so return existing,
+        if not return new camera instance
+        - name: name of camera
+        """
         if name not in self._cameras:
             if self.robot_online:
                 cam = self.camera_factory.add_camera_online(name)
@@ -56,5 +66,8 @@ class Setup:
         return self._cameras[name]
 
     async def stop(self):
-        pass
-        #await self.camera_factory.stop_all()
+        """
+        stops all cameras
+        """
+        for _, camera in self._cameras.items():
+            await camera.stop()

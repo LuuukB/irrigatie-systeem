@@ -34,12 +34,20 @@ class CanHandler(ICanHandler):
                 self._listening = False
 
     async def start(self):
+        """
+        starts 2 tasks
+        - one for listening to info from the amiga to get the current speed
+        - one to send messages over the Canbus
+        """
         if not self._listening:
             asyncio.create_task(self._speed_listener())
             asyncio.create_task(self._send_messages())
             self._listening = True
 
     async def _speed_listener(self):
+        """
+        listens to the amiga to get the current speed
+        """
         logger.debug("start looking for speed")
         async for event, payload in self.client.subscribe(
                 SubscribeRequest(uri = Uri(path= "/state"), every_n = 5),
@@ -53,6 +61,9 @@ class CanHandler(ICanHandler):
                 self.speed = measured_speed # m/s
 
     async def get_speed(self):
+        """
+        returns the current speed
+        """
         while True:
             with self.lock:
                 if self.speed is not None:
@@ -60,13 +71,18 @@ class CanHandler(ICanHandler):
             await asyncio.sleep(0.001)
 
     async def send_to_microcontroller(self, message: RawCanbusMessage):
-
+        """
+        sends message to microcontroller
+        - message: RawCanbusMessage containing at least location and encoded message
+        """
         logger.info(f"send Queue {message}")
         await self.send_queue.put(message)
 
 
     async def _send_messages(self):
-        """waits for a message to be put in the que to send this message"""
+        """
+        waits for a message to be put in the que to send this message
+        """
         while True:
             msg = await self.send_queue.get()  # wacht tot er iets is
             logger.debug("got message")

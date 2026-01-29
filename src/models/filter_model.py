@@ -1,8 +1,6 @@
 import asyncio
 import cv2
-import json
 
-from kivy.graphics.texture import Texture
 from kivy.properties import ObjectProperty
 from kivy.event import EventDispatcher
 
@@ -33,7 +31,9 @@ class FilterModel(EventDispatcher):
         ) = self.json_handler.get_filter_values()
 
     def update_filter(self):
-
+        """
+        update ImageFilter with current values
+        """
         self.img_filter.update_filter(
             self.lower_hue,
             self.upper_hue,
@@ -44,25 +44,48 @@ class FilterModel(EventDispatcher):
         )
 
     def set_filter_property(self, property, value):
-        """changes a property of the filter"""
+        """
+        changes a property of the filter
+        - property: property name witch to change value
+        - value: new value for the property
+        """
         setattr(self, property, value)
 
     def change_area(self, text):
+        """
+        change the area a contour needs to be, to be recognised as crop
+        - text: square pixels of how big contours need to be, to be recognised
+        """
         self.json_handler.update_property("detection_radius", text)
 
     def set_water(self, text):
+        """
+        change the water amount that wil be given to a crop
+        - crop: nieuw amount of water that wil be given to each individual crop in ml
+        """
         self.json_handler.update_property("water_amount", text)
 
     async def start_cameras(self):
+        """
+        start getting camera frames
+        """
         camera = await self.setup.get_camera("oak2")
         print("start cameras")
         self.camera_task = asyncio.create_task(self.process_stream(camera))
 
     def stop_cameras(self):
+        """
+        stop getting caemra frames
+        """
         self.camera_task.cancel()
 
     async def process_stream(self, camera):
-        print("start process")
+        """
+        updates to camera textures
+        - one texture for camera feed
+        - one texture for camera feed with overlaying current filter
+        - camera: camera to both show and put filter over
+        """
         while True:
             frame = await camera.get_frame()
             self.frame_texture = await ImageProcessor.get_processed_frame(frame)

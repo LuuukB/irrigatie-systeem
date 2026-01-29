@@ -1,20 +1,14 @@
 import os
 import asyncio
-import json
 os.environ["KIVY_NO_ARGS"] = "1"
 
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
-from vieuw_models.filter_model import FilterModel
+from models.filter_model import FilterModel
 from kivy.properties import NumericProperty
 from file_communication.json_handler import JsonHandler
 
-from widgets.camera_widget.camera_widget import CameraWidget
-
-
-Builder.load_file(os.path.join(os.path.dirname(__file__), "res/filter_screen.kv"))
-with open ("filter_values.json") as json_file:
-    data = json.load(json_file)
+Builder.load_file(os.path.join(os.path.dirname(__file__), "view/filter_screen.kv"))
 
 class FilterScreen(Screen):
     upper_hue = NumericProperty(0)
@@ -26,10 +20,10 @@ class FilterScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.vm = FilterModel()
+        self.model = FilterModel()
         self.json_handler = JsonHandler()
-        self.vm.bind(frame_texture = self.update_oak0)
-        self.vm.bind(filter_texture = self.update_oak1)
+        self.model.bind(frame_texture = self.update_oak0)
+        self.model.bind(filter_texture = self.update_oak1)
         self.camera_task: asyncio.Task = None
         (
             self.upper_hue,
@@ -41,18 +35,16 @@ class FilterScreen(Screen):
         ) = self.json_handler.get_filter_values()
 
     def on_enter(self):
-        print("enter")
-        self.camera_task = asyncio.create_task(self.vm.start_cameras())
+        """
+        start updating frames when entering this page
+        """
+        self.camera_task = asyncio.create_task(self.model.start_cameras())
 
     def on_leave(self):
-        print("leave")
-        self.vm.stop_cameras()
-
-    async def start_cameras(self):
-        self.vm.start_cameras()
-
-    def stop_cameras(self):
-        self.vm.stop_cameras()
+        """
+        stop updating frames when leaving this page
+        """
+        self.model.stop_cameras()
 
     def update_oak0(self,instance, value):
         if value:
@@ -63,19 +55,21 @@ class FilterScreen(Screen):
             self.ids.oak1.texture = value
 
     def on_slider_change(self, slider):
-        """updates slider value, and tells model to update filter"""
+        """
+        updates slider value, and tells model to update filter
+        - slider: slider instance that calls this function
+        """
         property = slider.slider_id
         value = round(slider.value)
         setattr(self, property, value)
-        self.vm.set_filter_property(property, value)
+        self.model.set_filter_property(property, value)
 
     def set_detection_radius(self, text):
-        self.vm.change_area(int(text))
+        self.model.change_area(int(text))
 
     def set_amount_of_water(self, text):
-        self.vm.set_water(int(text))
+        self.model.set_water(int(text))
 
     def stop(self):
         if self.camera_task is not None:
             self.camera_task.cancel()
-

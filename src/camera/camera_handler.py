@@ -27,7 +27,9 @@ class CameraHandler(ICameraHandler):
         self.image_decoder = TurboJPEG()
 
     async def start(self):
-        """checks if camera stream exists and start a task that constantly gets camera feed"""
+        """
+        checks if camera stream exists and start a task that constantly gets camera feed
+        """
         config = proto_from_json_file(self.service_config_path,EventServiceConfigList())
         for cfg in config.configs:
             if cfg.name == "camera":
@@ -43,7 +45,9 @@ class CameraHandler(ICameraHandler):
                 asyncio.create_task(self._reader())
 
     async def _reader(self):
-        """constantly checks camera feed and puts the last frame into last frame"""
+        """
+        constantly checks camera feed and puts current frame into last frame
+        """
         async for event, payload in self.frame_stream:
             message = payload_to_protobuf(event, payload)
             frame = self.image_decoder.decode(message.image_data)
@@ -51,7 +55,9 @@ class CameraHandler(ICameraHandler):
                 self.latest_frame = frame
 
     async def get_frame(self):
-        """returns latest frame"""
+        """
+        returns latest frame
+        """
         if not self.client:
             raise RuntimeError("Client niet gestart")
         while True:
@@ -61,7 +67,9 @@ class CameraHandler(ICameraHandler):
             await asyncio.sleep(0.001)
 
     async def stop(self):
-        """stops client"""
+        """
+        stops client
+        """
         self.running = False
         if self.client:
             await self.client.close()

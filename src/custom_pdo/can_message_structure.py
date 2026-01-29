@@ -31,14 +31,15 @@ class SetupPdo(Packet):
 
 class GenericPdo(Packet):
     """
-    pdo used to send generic pdo's, these are all the pdo's that only need 1 atribuut,
-    cob_id is crusial to what needs to be done
+    pdo used to send generic pdo's, these are all the pdo's that only need 1 attribute,
+    cob_id is crucial to what needs to be done
     """
     def __init__(self, command: int = 0):
         self.command = command  #0-65535
 
     def to_can_data(self) -> bytes:
         """
+        returns data in correct format
          - H for uint16 (command)
         """
         return struct.pack("<H", self.command)

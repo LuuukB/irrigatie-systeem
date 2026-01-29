@@ -5,7 +5,11 @@ from kivy.graphics.texture import Texture
 class ImageProcessor:
     @staticmethod
     async def get_processed_frame(frame, img_filter: ImageFilter = None):
-        """turns the given frame into a texture usable for kivy image"""
+        """
+        turns the given frame into a texture usable for kivy image
+        - frame: frame to process
+        - img_filter: filter to apply to frame
+        """
         if img_filter:
             frame = img_filter.apply_filter(frame)
 

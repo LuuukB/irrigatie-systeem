@@ -24,8 +24,7 @@ class HomeModel(EventDispatcher):
     def __init__(self):
         self.setup = Setup()
         self.point_handler = PointHandler()
-        self.oak2_processor = Cv2Processor(self.point_handler)
-        self.oak3_processor = Cv2Processor(self.point_handler)
+        self.processor = Cv2Processor()
         self.oak2_tracker = Tracker()
         self.oak3_tracker = Tracker()
         self.image_filter = self.setup.filter
@@ -38,6 +37,9 @@ class HomeModel(EventDispatcher):
 
 
     async def start_cameras(self):
+        """
+        starts updating textures with frames form the camera's
+        """
         oak0 = await self.setup.get_camera("oak0")
         self.oak2 = await self.setup.get_camera("oak2")
         self.oak3 = await self.setup.get_camera("oak3")
@@ -46,6 +48,11 @@ class HomeModel(EventDispatcher):
         self.tasks.append(asyncio.create_task(self.process_stream(self.oak3, "oak3")))
 
     async def process_stream(self, camera, property_name : str):
+        """
+        gets frame from camera, turns it into a texture end updates the corresponding texture
+        - camera: camera to get frame from
+        - property_name: name of the property to change the texture from
+        """
         while True:
             frame = await camera.get_frame()
             texture = await ImageProcessor.get_processed_frame(frame)
@@ -53,26 +60,39 @@ class HomeModel(EventDispatcher):
             await asyncio.sleep(0.01)
 
     def stop_cameras(self):
+        """
+        stops updating textures for all cameras
+        """
         for task in self.tasks:
             task.cancel()
 
     async def start(self):
+        """
+        starts a task to check distances of detected crops
+        and starts algorithm for both oak2 and oak3
+        """
         asyncio.create_task(self.point_handler.check_distances())
 
         logger.info("start looking for crops")
         while True and not self.stop_thread:
 
-            await self.naam(self.oak2, 0, self.oak2_processor, self.oak2_tracker)
-            await self.naam(self.oak3, 1, self.oak3_processor, self.oak3_tracker)
+            await self.analyze_camera_frame(self.oak2, 0, self.oak2_tracker)
+            await self.analyze_camera_frame(self.oak3, 1, self.oak3_tracker)
 
             await asyncio.sleep(0.1)
 
-    async def naam(self, camera, camera_number, processor, tracker):
-        """checks camera for contours and acts accordingly"""
+    async def analyze_camera_frame(self, camera, camera_number, tracker):
+        """
+        checks camera for contours finds out if they are crops,
+        then puts the crops to be added to setup's
+        - camera: camera to get frame from
+        - camera_number: camera from left to right
+        - tracker: tracker that keeps track of all discovered contours for just this camera
+        """
         tracker = tracker
         frame = await camera.get_frame()
 
-        contours = processor.get_contours(frame, self.image_filter)
+        contours = self.processor.get_contours(frame, self.image_filter)
 
         centroids = []
         for c in contours:
