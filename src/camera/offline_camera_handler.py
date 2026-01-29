@@ -13,18 +13,25 @@ class OfflineCameraHandler(ICameraHandler):
         self.running = False
         self.lock = Lock()
         if self.video_path is None:
+            """
+            change the video path to were test video is located
+            """
             self.video_path = "/home/luukb/python/video/test2oak2.rgb.mp4"
             self.cap = cv2.VideoCapture(self.video_path)
         else:
             self.cap = cv2.VideoCapture(self.video_path)
 
     async def start(self):
+        """opens pre-recorded video"""
         self.running = True
         if not self.cap.isOpened():
             raise ValueError(f"can't open video: {self.video_path}")
         threading.Thread(target=self.reader, daemon=True).start()
 
     def reader(self):
+        """
+        continuously swaps latest_frame with current frame of the video
+        """
         while self.running:
             ret, frame = self.cap.read()
             if not ret:
@@ -38,6 +45,9 @@ class OfflineCameraHandler(ICameraHandler):
             time.sleep(0.3)
 
     async def get_frame(self):
+        """
+        returns latest frame
+        """
         while True:
             with self.lock:
                 if self.latest_frame is not None:
