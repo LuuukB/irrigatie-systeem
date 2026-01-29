@@ -32,7 +32,7 @@ class Setup:
     def initialize_canbus(self):
         """
         checks if Canbus can be created if not create mock Canbus
-        - does not work, but if u don't push the offline version
+        - does not work, but if u don't push the offline version to the robot
          u can work offline and keep the robot on online
         """
         try:
