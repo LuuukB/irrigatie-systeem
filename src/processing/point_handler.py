@@ -152,7 +152,7 @@ class PointHandler:
                             await self.can_bus.send_to_microcontroller(message = RawCanbusMessage(
                                 data = SetupPdo(
                                     command = 0,
-                                    amount = int(self.json_handler.water_amount / crop.setup_amount)).to_can_data(),
+                                    amount = int(self.json_handler.get_water_amount() / crop.setup_amount)).to_can_data(),
                                 id = 0x300 + setup))
                             logger.debug("done sending")
                             continue
